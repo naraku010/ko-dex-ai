@@ -35,6 +35,8 @@
   },
   "bundle": {
     "active": true,
+    "publisher": "KODEX",
+    "homepage": "https://ko-dex.com",
     "createUpdaterArtifacts": true,
     "targets": ["nsis"],
     "icon": [

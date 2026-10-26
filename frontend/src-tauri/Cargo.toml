@@ -2,7 +2,7 @@
 name = "app"
 version = "0.1.0"
 description = "KODEX AI 비서"
-authors = ["KODEX"]
+authors = ["KODEX <naraku010@gmail.com>"]
 license = ""
 repository = ""
 edition = "2021"

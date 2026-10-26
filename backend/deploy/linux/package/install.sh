@@ -243,6 +243,7 @@ line ""
 line "설정 바꾸기 : sudo nano $PREFIX/channels/<채널>/.env 후 sudo systemctl restart kodex-channel-<채널>"
 line "로그        : journalctl -u kodex-channel-<채널> -f"
 line "제거        : sudo $PREFIX/uninstall.sh"
+line "문의        : naraku010@gmail.com"
 line "요약 파일   : $PREFIX/install-summary.txt (키가 들어 있어 root만 읽습니다)"
 
 if [[ ${#FAILED[@]} -gt 0 ]]; then

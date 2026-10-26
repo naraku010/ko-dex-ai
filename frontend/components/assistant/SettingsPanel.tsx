@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Mail } from "lucide-react";
 import ChannelPanel from "@/components/channels/ChannelPanel";
 import { installAppUpdate } from "@/lib/appUpdate";
+import { CONTACT_EMAIL, openContactMail } from "@/lib/contact";
 import CliConnectionCard from "./CliConnectionCard";
 import UsagePanel from "./UsagePanel";
 
@@ -62,9 +63,19 @@ export default function SettingsPanel({
         )}
         <button
           type="button"
+          onClick={() => void openContactMail().catch(() => setUpdateNote(`문의: ${CONTACT_EMAIL}`))}
+          className="ml-auto flex items-center gap-1 rounded px-3 py-1 text-xs font-semibold"
+          style={{ color: "var(--dc-muted)", border: "1px solid var(--dc-border)" }}
+          title={CONTACT_EMAIL}
+        >
+          <Mail size={13} />
+          문의하기
+        </button>
+        <button
+          type="button"
           onClick={() => void updateApp()}
           disabled={updating}
-          className="ml-auto rounded px-3 py-1 text-xs font-semibold text-white disabled:opacity-60"
+          className="rounded px-3 py-1 text-xs font-semibold text-white disabled:opacity-60"
           style={{ background: "var(--dc-blurple)" }}
         >
           업데이트

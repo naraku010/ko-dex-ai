@@ -2,6 +2,7 @@
   "name": "kodex-ai",
   "version": "1.6.0",
   "private": true,
+  "author": "KODEX <naraku010@gmail.com>",
   "scripts": {
     "predev": "npm run sidecar:bundle",
     "dev": "next dev",

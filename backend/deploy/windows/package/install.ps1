@@ -233,6 +233,7 @@ try {
     $summary.Add('')
     $summary.Add("설정 파일 : $Root\channels\<채널>\.env  (바꾼 뒤 서비스 KodexChannel-<채널> 재시작)")
     $summary.Add("로그      : $LogDir")
+    $summary.Add("문의      : naraku010@gmail.com")
     $summaryFile = Join-Path $Root 'install-summary.txt'
     [System.IO.File]::WriteAllLines($summaryFile, $summary.ToArray(), (New-Object System.Text.UTF8Encoding $true))
 

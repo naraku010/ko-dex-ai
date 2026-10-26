@@ -35,3 +35,8 @@ glibc 2.31 이상이 필요합니다 (Ubuntu 20.04+, Debian 11+, Rocky/RHEL 9+).
   journalctl -u kodex-channel-<채널> -f
   sudo /opt/kodex-channels/uninstall.sh          # 서비스만 제거
   sudo /opt/kodex-channels/uninstall.sh --purge  # 폴더까지 삭제
+
+문의
+----
+  설치나 사용 중 문제가 있으면 naraku010@gmail.com 로 보내주세요.
+  버전(VERSION 파일)과 로그를 함께 보내주시면 빠르게 확인할 수 있습니다.

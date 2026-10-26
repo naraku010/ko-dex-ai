@@ -2,6 +2,8 @@
 
 `kodex-ai` 데스크톱 앱이 URL로 붙는 채널 서버들. **채널 하나 = 프로젝트 하나**입니다. 한 서버에 다 몰지 않고 따로 뜨고, 따로 배포하고, 따로 API 키를 씁니다.
 
+문의: [naraku010@gmail.com](mailto:naraku010@gmail.com)
+
 공통 규격(kodex.channel/v1)은 `packages/channelkit`이 담당하고, 채널 프로젝트는 툴과 프롬프트만 씁니다.
 
 ```
