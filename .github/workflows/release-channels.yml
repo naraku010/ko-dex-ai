@@ -1,0 +1,162 @@
+# 채널 서버 설치 파일을 Windows·Linux로 나눠 만든다.
+#
+#   channels-v1.0.0 태그를 올리면  → 두 OS 빌드 후 GitHub 릴리스에 첨부
+#   Actions 화면에서 직접 실행하면 → 빌드만 하고 아티팩트로 남김
+#
+# 데스크톱 앱 자동 업데이트가 releases/latest 를 보므로, 이 릴리스는 latest로 표시하지 않는다.
+
+name: release-channels
+
+on:
+  push:
+    tags: ["channels-v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "패키지 버전 (비우면 backend/pyproject.toml)"
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows
+            runner: windows-latest
+          # glibc 2.31(Debian 11)에서 빌드해야 Ubuntu 20.04 / Debian 11 / RHEL 9 이상에서 다 돈다.
+          - os: linux
+            runner: ubuntu-latest
+            container: python:3.11-bullseye
+    name: build (${{ matrix.os }})
+    runs-on: ${{ matrix.runner }}
+    container: ${{ matrix.container }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 버전
+        id: ver
+        run: |
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            v="${GITHUB_REF_NAME#channels-v}"
+          else
+            v="${{ github.event.inputs.version }}"
+          fi
+          echo "version=${v}" >> "$GITHUB_OUTPUT"
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.11"
+
+      - name: 의존성
+        run: uv sync --all-packages --frozen
+
+      - name: NSSM, Inno Setup (Windows)
+        if: matrix.os == 'windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $zip = "$env:RUNNER_TEMP\nssm.zip"
+          $ok = $false
+          foreach ($i in 1..5) {
+            try { Invoke-WebRequest https://nssm.cc/release/nssm-2.24.zip -OutFile $zip; $ok = $true; break }
+            catch { Start-Sleep -Seconds (5 * $i) }
+          }
+          if ($ok) {
+            Expand-Archive $zip "$env:RUNNER_TEMP\nssm" -Force
+            $exe = Get-ChildItem "$env:RUNNER_TEMP\nssm" -Recurse -Filter nssm.exe | Where-Object { $_.FullName -match 'win64' } | Select-Object -First 1
+          } else {
+            choco install nssm -y --no-progress
+            $exe = Get-ChildItem C:\ProgramData\chocolatey\lib\nssm -Recurse -Filter nssm.exe | Where-Object { $_.FullName -match 'win64' } | Select-Object -First 1
+            if (-not $exe) { $exe = Get-ChildItem C:\ProgramData\chocolatey\lib\nssm -Recurse -Filter nssm.exe | Select-Object -First 1 }
+          }
+          if (-not $exe) { throw 'nssm.exe를 받지 못했습니다.' }
+          "NSSM=$($exe.FullName)" >> $env:GITHUB_ENV
+          if (-not (Get-Command iscc -ErrorAction SilentlyContinue) -and -not (Test-Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe")) {
+            choco install innosetup -y --no-progress
+          }
+
+      - name: 빌드 (Windows)
+        if: matrix.os == 'windows'
+        run: |
+          args=(--all --release --nssm "$NSSM")
+          [[ -n "${{ steps.ver.outputs.version }}" ]] && args+=(--version "${{ steps.ver.outputs.version }}")
+          uv run --package channel-exe channel-exe "${args[@]}"
+
+      - name: 빌드 (Linux)
+        if: matrix.os == 'linux'
+        run: |
+          args=(--all --release)
+          [[ -n "${{ steps.ver.outputs.version }}" ]] && args+=(--version "${{ steps.ver.outputs.version }}")
+          uv run --package channel-exe channel-exe "${args[@]}"
+
+      - name: 스모크 테스트 (Linux)
+        if: matrix.os == 'linux'
+        run: |
+          pkg="$(find dist/release -mindepth 1 -maxdepth 1 -type d | head -n1)"
+          dir="$pkg/channels/shop"
+          cp "$dir/.env.example" "$dir/.env"
+          sed -i 's/^CHANNEL_API_KEYS=.*/CHANNEL_API_KEYS=ci/' "$dir/.env"
+          "$dir/shop-channel" & pid=$!
+          for i in $(seq 1 60); do curl -fsS http://127.0.0.1:12001/health && break; sleep 1; done
+          curl -fsS http://127.0.0.1:12001/health
+          curl -fsS -o /dev/null http://127.0.0.1:12001/images/AP-HOOD-01.jpg
+          kill $pid
+          rm -rf "$dir/.env" "$dir/data"
+
+      - name: 스모크 테스트 (Windows)
+        if: matrix.os == 'windows'
+        shell: pwsh
+        run: |
+          $pkg = Get-ChildItem dist\release -Directory | Select-Object -First 1
+          $dir = Join-Path $pkg.FullName 'channels\shop'
+          (Get-Content "$dir\.env.example") -replace '^CHANNEL_API_KEYS=.*', 'CHANNEL_API_KEYS=ci' | Set-Content "$dir\.env"
+          $p = Start-Process "$dir\shop-channel.exe" -WorkingDirectory $dir -PassThru
+          $ok = $false
+          foreach ($i in 1..60) { try { Invoke-RestMethod http://127.0.0.1:12001/health; $ok = $true; break } catch { Start-Sleep 1 } }
+          if (-not $ok) { throw 'shop 채널이 뜨지 않았습니다.' }
+          Invoke-WebRequest http://127.0.0.1:12001/images/AP-HOOD-01.jpg -OutFile $env:RUNNER_TEMP\img.jpg
+          Stop-Process $p.Id -Force
+          Start-Sleep 2
+          Remove-Item "$dir\.env", "$dir\data" -Recurse -Force -ErrorAction SilentlyContinue
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: egi-channels-${{ matrix.os }}
+          path: |
+            backend/dist/release/*.zip
+            backend/dist/release/*.exe
+            backend/dist/release/*.tar.gz
+            backend/dist/release/*.run
+          if-no-files-found: error
+
+  release:
+    if: github.ref_type == 'tag'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          merge-multiple: true
+      - name: SHA256
+        run: cd out && sha256sum * > SHA256SUMS.txt
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: 채널 서버 ${{ github.ref_name }}
+          make_latest: false
+          files: out/*
+          body: |
+            | OS | 파일 | 설치 |
+            | --- | --- | --- |
+            | Windows x64 | `egi-channels-setup-*-windows-x64.exe` | 실행 후 다음 → 완료. 서비스 등록·API 키 생성까지 합니다 |
+            | Windows x64 | `egi-channels-*-windows-x64.zip` | 풀고 관리자 PowerShell에서 `.\install.ps1` |
+            | Linux x64 | `egi-channels-*-linux-x64.run` | `sudo sh egi-channels-*-linux-x64.run` |
+            | Linux x64 | `egi-channels-*-linux-x64.tar.gz` | 풀고 `sudo ./install.sh` |

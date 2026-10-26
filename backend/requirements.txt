@@ -1,0 +1,16 @@
+﻿# 서버 설치용. uv가 없는 환경에서 이것만 있으면 된다.
+#
+#   python -m venv .venv
+#   .venv\Scripts\python -m pip install -r requirements.txt
+#
+# 개발 PC에서는 uv sync --all-packages 를 쓰고, 이 파일은 배포용으로 둔다.
+
+# 서드파티는 uv.lock에 맞춘 고정 버전을 쓴다.
+-r requirements.lock.txt
+
+# 워크스페이스 패키지. editable로 넣어야 git pull한 코드가 재설치 없이 바로 반영된다.
+# 채널을 새로 만들면 여기에 한 줄 추가한다.
+-e ./packages/channelkit
+-e ./packages/channel-exe
+-e ./packages/console
+-e ./channels/shop

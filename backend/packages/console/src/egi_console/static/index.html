@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EGI 채널 관제</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --panel: #171a21;
+      --line: #2a2f3a;
+      --text: #e8eaed;
+      --muted: #9aa3b2;
+      --faint: #6b7380;
+      --ok: #3dd68c;
+      --warn: #f5c14a;
+      --bad: #f07178;
+      --accent: #6d8cff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 14px/1.5 "Segoe UI", "Malgun Gothic", sans-serif;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+    h1 { margin: 0; font-size: 18px; }
+    .sub { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    button {
+      background: #232833;
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 7px 12px;
+      cursor: pointer;
+    }
+    button:disabled { opacity: .45; cursor: default; }
+    button.primary { background: var(--accent); border-color: transparent; color: #fff; }
+    button.danger { color: var(--bad); }
+    main { padding: 20px 24px 40px; max-width: 1100px; }
+    .grid { display: grid; gap: 12px; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+    .row { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+    .name { font-weight: 650; }
+    .meta { color: var(--muted); font-size: 12px; font-family: ui-monospace, Consolas, monospace; }
+    .dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+      background: var(--faint);
+    }
+    .dot.ok { background: var(--ok); }
+    .dot.warn { background: var(--warn); }
+    .dot.bad { background: var(--bad); }
+    .badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #232833;
+      color: var(--muted);
+    }
+    pre {
+      background: #10131a;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      overflow: auto;
+      color: #c9d1d9;
+      font-size: 12px;
+      min-height: 80px;
+    }
+    .err { color: var(--bad); margin-top: 10px; }
+    .commits { color: var(--muted); font-size: 12px; margin: 8px 0 0; padding: 0; }
+    .commits li { margin: 2px 0; }
+    .badge.warn { background: rgba(245, 193, 74, .14); color: var(--warn); }
+    .badge.accent { background: rgba(109, 140, 255, .16); color: var(--accent); }
+    .history { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+    .history-head { display: flex; gap: 8px; align-items: center; color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+    .day { color: var(--faint); font-size: 11px; margin: 12px 0 4px; letter-spacing: .02em; }
+    .day:first-of-type { margin-top: 0; }
+    .timeline { list-style: none; margin: 0; padding: 0 0 0 14px; border-left: 2px solid var(--line); }
+    .timeline li { position: relative; padding: 4px 0 8px 10px; }
+    .timeline li::before {
+      content: ""; position: absolute; left: -20px; top: 10px;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--panel); border: 2px solid var(--faint);
+    }
+    .timeline li.pending::before { border-color: var(--warn); background: var(--warn); }
+    .timeline li.local::before { border-color: var(--accent); }
+    .timeline li.applied::before { border-color: var(--ok); }
+    .c-title { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .c-title b { font-weight: 600; }
+    .c-meta { color: var(--faint); font-size: 11px; font-family: ui-monospace, Consolas, monospace; }
+    details { margin-top: 4px; font-size: 12px; color: var(--muted); }
+    summary { cursor: pointer; color: var(--faint); }
+    details ul { margin: 4px 0 0; padding-left: 18px; font-family: ui-monospace, Consolas, monospace; font-size: 11px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>EGI 채널 관제</h1>
+      <div class="sub" id="gitLine">저장소 상태를 읽는 중…</div>
+    </div>
+    <div class="actions">
+      <input id="token" type="password" placeholder="관제 토큰" autocomplete="off"
+        style="height:34px;border-radius:8px;border:1px solid var(--line);background:#10131a;color:var(--text);padding:0 10px;width:180px" />
+      <button type="button" id="btnRefresh">새로고침</button>
+      <button type="button" id="btnFetch">git fetch</button>
+      <button type="button" class="primary" id="btnUpdate">업데이트</button>
+    </div>
+  </header>
+  <main>
+    <div id="error" class="err" hidden></div>
+    <div class="grid" id="list"></div>
+    <h2 style="font-size:13px;color:var(--muted);margin:24px 0 8px;">작업 기록</h2>
+    <pre id="log">대기 중</pre>
+    <ul class="commits" id="commits"></ul>
+  </main>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    let busy = false;
+    const openHistory = new Set();
+    const historyCache = new Map();
+
+    const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const pad2 = (n) => String(n).padStart(2, "0");
+
+    function ago(date) {
+      const sec = Math.max(0, (Date.now() - date.getTime()) / 1000);
+      if (sec < 60) return "방금";
+      if (sec < 3600) return `${Math.floor(sec / 60)}분 전`;
+      if (sec < 86400) return `${Math.floor(sec / 3600)}시간 전`;
+      if (sec < 86400 * 30) return `${Math.floor(sec / 86400)}일 전`;
+      return `${Math.floor(sec / 86400 / 30)}개월 전`;
+    }
+
+    const STATE_BADGE = {
+      pending: `<span class="badge warn">업데이트 대기</span>`,
+      local: `<span class="badge accent">원격에 없음</span>`,
+      applied: "",
+    };
+
+    function fileList(label, files) {
+      if (!files.length) return "";
+      return `<details><summary>${label} ${files.length}개</summary><ul>${files.map((f) => `<li>${esc(f)}</li>`).join("")}</ul></details>`;
+    }
+
+    function renderHistory(name) {
+      const box = document.getElementById(`hist-${name}`);
+      if (!box) return;
+      box.hidden = !openHistory.has(name);
+      if (box.hidden) return;
+      const data = historyCache.get(name);
+      if (!data) { box.innerHTML = `<div class="sub">이력을 읽는 중…</div>`; return; }
+      if (data.error) { box.innerHTML = `<div class="err">${esc(data.error)}</div>`; return; }
+      if (!data.commits.length) { box.innerHTML = `<div class="sub">이 채널을 바꾼 커밋이 없습니다.</div>`; return; }
+
+      const head = [
+        `최근 ${data.commits.length}건`,
+        data.pending ? `<span class="badge warn">받지 않은 변경 ${data.pending}건</span>` : "",
+        data.local ? `<span class="badge accent">올리지 않은 변경 ${data.local}건</span>` : "",
+        data.remote ? "" : `<span class="badge">원격 정보 없음 · git fetch 필요</span>`,
+      ].join(" ");
+
+      let lastDay = "";
+      let html = "";
+      for (const c of data.commits) {
+        const d = new Date(c.date);
+        const day = `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+        if (day !== lastDay) {
+          if (lastDay) html += "</ol>";
+          html += `<div class="day">${day}</div><ol class="timeline">`;
+          lastDay = day;
+        }
+        const onlyShared = !c.files.length && c.shared.length;
+        html += `<li class="${c.state}">
+          <div class="c-title"><b>${esc(c.title)}</b>${STATE_BADGE[c.state] || ""}${onlyShared ? `<span class="badge">공통 모듈</span>` : ""}</div>
+          <div class="c-meta">${esc(c.short)} · ${pad2(d.getHours())}:${pad2(d.getMinutes())} (${ago(d)}) · ${esc(c.author)}</div>
+          ${fileList("채널 파일", c.files)}${fileList("공통 파일", c.shared)}
+        </li>`;
+      }
+      box.innerHTML = `<div class="history-head">${head}</div>${html}</ol>`;
+    }
+
+    async function loadHistory(name) {
+      historyCache.delete(name);
+      renderHistory(name);
+      try {
+        historyCache.set(name, await api(`/api/channels/${encodeURIComponent(name)}/history?limit=40`));
+      } catch (err) {
+        historyCache.set(name, { error: err.message });
+      }
+      renderHistory(name);
+    }
+    const params = new URLSearchParams(location.search);
+    const stored = localStorage.getItem("egi-console-token") || "";
+    $("token").value = params.get("token") || stored;
+    $("token").addEventListener("change", () => {
+      localStorage.setItem("egi-console-token", $("token").value.trim());
+      run(reload);
+    });
+
+    function setBusy(on) {
+      busy = on;
+      document.querySelectorAll("button").forEach((b) => { b.disabled = on; });
+    }
+
+    function showError(text) {
+      $("error").hidden = !text;
+      $("error").textContent = text || "";
+    }
+
+    function modeLabel(ch) {
+      if (ch.health?.ok) return "응답 중";
+      if (ch.mode === "service") return ch.service === "running" ? "서비스 기동" : `서비스 ${ch.service}`;
+      if (ch.mode === "local") return "로컬 프로세스";
+      if (!ch.ready) return "미설정";
+      return "중지";
+    }
+
+    function dotClass(ch) {
+      if (ch.health?.ok) return "ok";
+      if (!ch.ready) return "warn";
+      if (ch.running) return "warn";
+      return "bad";
+    }
+
+    function render(state) {
+      const git = state.git || {};
+      const behind = git.behind || 0;
+      const ahead = git.ahead || 0;
+      $("gitLine").textContent = git.ok
+        ? `${git.branch} · ${git.short} · ${git.subject || ""}${behind ? ` · 원격 ${behind}개 앞섬` : ""}${ahead ? ` · 로컬 ${ahead}개 앞섬` : ""}`
+        : (git.error || "git 정보를 읽지 못했습니다.");
+      $("commits").innerHTML = (git.commits || []).map((c) => `<li><code>${c.sha}</code> ${c.title}</li>`).join("");
+
+      $("list").innerHTML = (state.channels || []).map((ch) => `
+        <section class="card">
+          <div class="row">
+            <div>
+              <div class="name"><span class="dot ${dotClass(ch)}"></span>${ch.name}</div>
+              <div class="meta">
+                ${ch.port ? `127.0.0.1:${ch.port}` : "포트 없음"}
+                · ${modeLabel(ch)}
+                · ${ch.fileManagement ? "문서함(로컬)" : "데이터"}
+                ${ch.pid ? ` · pid ${ch.pid}` : ""}
+                ${ch.service ? ` · ${ch.service}` : ""}
+              </div>
+              ${ch.skip ? `<div class="sub">${ch.skip}</div>` : ""}
+            </div>
+            <div class="actions">
+              ${ch.pending ? `<span class="badge warn" title="원격에 있고 아직 받지 않은 이 채널 변경">갱신 대기 ${ch.pending}</span>` : ""}
+              <span class="badge">${ch.health?.ok ? "health ok" : (ch.health?.error || "down")}</span>
+              ${ch.hasFileStore ? `<select data-act="type" data-name="${ch.name}" style="height:34px;border-radius:8px;border:1px solid var(--line);background:#10131a;color:var(--text);padding:0 8px">
+                <option value="data" ${ch.type === "data" ? "selected" : ""}>데이터 (파일관리 없음)</option>
+                <option value="files" ${ch.type === "files" ? "selected" : ""}>문서함 (이 PC에 보관)</option>
+              </select>` : ""}
+              ${ch.fileManagement && ch.port ? `<a href="http://${location.hostname}:${ch.port}/" target="_blank" style="color:var(--accent);text-decoration:none;padding:7px 12px">문서함</a>` : ""}
+              <button type="button" data-act="start" data-name="${ch.name}">시작</button>
+              <button type="button" data-act="stop" data-name="${ch.name}">중지</button>
+              <button type="button" data-act="restart" data-name="${ch.name}">재시작</button>
+              <button type="button" data-act="updateOne" data-name="${ch.name}">이 채널만 갱신</button>
+              <button type="button" data-act="history" data-name="${ch.name}">${openHistory.has(ch.name) ? "이력 닫기" : "변경 이력"}</button>
+            </div>
+          </div>
+          <div class="history" id="hist-${ch.name}" hidden></div>
+        </section>
+      `).join("") || `<p class="sub">channels 폴더가 비어 있습니다.</p>`;
+      (state.channels || []).forEach((ch) => renderHistory(ch.name));
+    }
+
+    async function api(path, opts = {}) {
+      const token = $("token").value.trim();
+      const headers = { "Content-Type": "application/json", ...(opts.headers || {}) };
+      if (token) headers["X-Console-Token"] = token;
+      const res = await fetch(path, {
+        ...opts,
+        headers,
+      });
+      const body = await res.json().catch(() => ({}));
+      if (res.status === 401) {
+        $("token").focus();
+        $("token").style.borderColor = "var(--bad)";
+      } else if (res.ok) {
+        $("token").style.borderColor = "";
+      }
+      if (!res.ok || body.ok === false) {
+        throw new Error(body.error || body.detail || body.data?.log || `요청 실패 (${res.status})`);
+      }
+      return body.data ?? body;
+    }
+
+    async function reload() {
+      showError("");
+      const data = await api("/api/state");
+      render(data);
+      openHistory.forEach((name) => loadHistory(name));
+      return data;
+    }
+
+    $("btnRefresh").onclick = () => run(reload);
+    $("btnFetch").onclick = () => run(async () => {
+      const git = await api("/api/git/fetch", { method: "POST" });
+      $("log").textContent = git.behind ? `원격에 ${git.behind}개 커밋이 있습니다.` : "원격과 같습니다.";
+      await reload();
+    });
+    $("btnUpdate").onclick = () => run(() => update());
+
+    $("list").addEventListener("change", (ev) => {
+      const sel = ev.target.closest("select[data-act='type']");
+      if (!sel || busy) return;
+      run(async () => {
+        await api(`/api/channels/${sel.dataset.name}/profile`, {
+          method: "POST",
+          body: JSON.stringify({ type: sel.value }),
+        });
+        $("log").textContent = `${sel.dataset.name} 타입을 ${sel.value}로 저장했습니다. 재시작해야 앱에 반영됩니다.`;
+        await reload();
+      });
+    });
+
+    $("list").addEventListener("click", (ev) => {
+      const btn = ev.target.closest("button[data-act]");
+      if (!btn || busy) return;
+      const name = btn.dataset.name;
+      const act = btn.dataset.act;
+      if (act === "history") {
+        const open = !openHistory.has(name);
+        if (open) openHistory.add(name); else openHistory.delete(name);
+        btn.textContent = open ? "이력 닫기" : "변경 이력";
+        if (open) loadHistory(name); else renderHistory(name);
+        return;
+      }
+      run(async () => {
+        if (act === "updateOne") return update(name);
+        await api(`/api/channels/${name}/${act}`, { method: "POST" });
+        $("log").textContent = `${name} ${act}`;
+        await new Promise((r) => setTimeout(r, 700));
+        await reload();
+      });
+    });
+
+    async function update(channel) {
+      $("log").textContent = "업데이트 중…";
+      const result = await api("/api/update", {
+        method: "POST",
+        body: JSON.stringify({ channel: channel || null, force: false }),
+      });
+      $("log").textContent = result.log || JSON.stringify(result, null, 2);
+      await reload();
+    }
+
+    async function run(fn) {
+      if (busy) return;
+      setBusy(true);
+      try { await fn(); }
+      catch (err) { showError(err.message); $("log").textContent = err.message; }
+      finally { setBusy(false); }
+    }
+
+    run(reload);
+  </script>
+</body>
+</html>

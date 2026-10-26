@@ -1,0 +1,51 @@
+{
+  "name": "egi-ai",
+  "version": "1.6.0",
+  "private": true,
+  "scripts": {
+    "predev": "npm run sidecar:bundle",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "tauri": "tauri",
+    "unlock:tauri": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/unlock-tauri.ps1",
+    "tauri:dev": "npm run unlock:tauri && powershell -NoProfile -ExecutionPolicy Bypass -File scripts/tauri.ps1 dev",
+    "tauri:build": "npm run unlock:tauri && powershell -NoProfile -ExecutionPolicy Bypass -File scripts/tauri.ps1 build --config src-tauri/tauri.bundle.conf.json",
+    "sidecar:bundle": "esbuild sidecar/index.js --bundle --platform=node --format=cjs --outfile=sidecar/bundle.js",
+    "prepare:node": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/prepare-node.ps1",
+    "tauri:prebuild": "npm run unlock:tauri && npm run prepare:node && npm run sidecar:bundle && npm run build",
+    "release": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/publish-update.ps1"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@tauri-apps/api": "^2.11.1",
+    "@tauri-apps/plugin-process": "^2.3.1",
+    "@tauri-apps/plugin-shell": "^2.3.6",
+    "@tauri-apps/plugin-sql": "^2.4.1",
+    "@tauri-apps/plugin-store": "^2.4.4",
+    "@tauri-apps/plugin-updater": "^2.12.0",
+    "echarts": "^6.1.0",
+    "lucide-react": "^1.39.0",
+    "next": "16.3.4",
+    "pdf-parse": "^1.1.1",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "word-extractor": "^1.0.4",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
+    "zod": "^4.5.4",
+    "zustand": "^5.0.15"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@tauri-apps/cli": "^2.11.4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "esbuild": "^0.25.12",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.4",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

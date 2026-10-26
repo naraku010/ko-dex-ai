@@ -1,0 +1,48 @@
+# 의존성, 빌드 결과, 비밀, 이 PC에서만 생기는 데이터.
+# .env.example 은 남긴다.
+
+# Node / Next / Tauri
+frontend/node_modules/
+frontend/.pnp
+frontend/.pnp.*
+frontend/.yarn/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/coverage/
+frontend/.vercel/
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
+frontend/src-tauri/target/
+frontend/src-tauri/binaries/*.exe
+frontend/sidecar/node_modules/
+frontend/sidecar/.data/
+frontend/sidecar/bundle.js
+
+# Python
+backend/.venv/
+backend/**/__pycache__/
+backend/**/*.py[cod]
+backend/**/*.egg-info/
+backend/.pytest_cache/
+backend/.ruff_cache/
+backend/dist/
+backend/build/
+backend/logs/
+backend/**/*.log
+backend/channels/*/data/
+backend/PDF/
+backend/pdf/
+
+# 비밀. 예제 파일은 커밋한다.
+**/.env
+**/.env.*
+!**/.env.example
+*.pem
+
+# 에디터, OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log

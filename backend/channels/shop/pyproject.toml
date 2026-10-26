@@ -1,0 +1,24 @@
+[project]
+name = "shop-channel"
+version = "1.2.0"
+description = "쇼핑몰 데모 채널. 의류·식품 1년치 가상 데이터를 SQLite로 만들어 조회한다."
+requires-python = ">=3.11"
+dependencies = [
+    "channelkit",
+    "python-dotenv>=1.0",
+    "uvicorn[standard]>=0.30",
+]
+
+[project.scripts]
+shop-channel = "shop_channel.main:run"
+shop-seed = "shop_channel.seed:run"
+
+[tool.uv.sources]
+channelkit = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/shop_channel"]

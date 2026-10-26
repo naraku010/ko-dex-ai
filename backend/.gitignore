@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.py[cod]
+.env
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# 데모 데이터는 씨앗이 고정이라 언제든 다시 만들 수 있다. shop-seed로 생성한다.
+channels/*/data/
+*.log
+logs/
+.idea
+/pdf

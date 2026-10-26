@@ -1,0 +1,17 @@
+[project]
+name = "channelkit"
+version = "0.1.0"
+description = "egi.channel/v1 규격 구현 코어. 채널 프로젝트는 툴과 프롬프트만 쓰면 된다."
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "httpx>=0.27",
+    "pydantic>=2.8",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/channelkit"]
