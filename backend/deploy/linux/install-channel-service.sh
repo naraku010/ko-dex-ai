@@ -4,7 +4,7 @@
 #
 # 하는 일
 #   1. venv를 만들고 channelkit과 channels/ 아래 채널 패키지를 모두 설치한다
-#   2. .env가 준비된 채널만 systemd 유닛(egi-channel-<채널>.service)으로 띄운다
+#   2. .env가 준비된 채널만 systemd 유닛(kodex-channel-<채널>.service)으로 띄운다
 #   3. http://127.0.0.1:<PORT>/health 로 실제 응답까지 확인한다
 #
 # .env가 없는 채널은 패키지만 깔고 서비스는 만들지 않는다.
@@ -12,7 +12,7 @@
 # 사용
 #   sudo ./install-channel-service.sh
 #   sudo ./install-channel-service.sh --channel shop
-#   sudo ./install-channel-service.sh --user egi --python python3.11
+#   sudo ./install-channel-service.sh --user kodex --python python3.11
 #
 # 외부 노출은 각 채널 .env의 HOST로 정한다.
 #   127.0.0.1  → 이 서버 안에서만. 외부 노출은 앞단 프록시가 맡는다.
@@ -146,7 +146,7 @@ start_one() {
     local env_file="$channel_dir/.env"
     local package="$name-channel"
     local exe="$VENV/bin/$package"
-    local service="egi-channel-$name"
+    local service="kodex-channel-$name"
     local unit="/etc/systemd/system/$service.service"
     local bind_host port
 
@@ -169,7 +169,7 @@ start_one() {
     tmp="$(mktemp)"
     cat > "$tmp" <<EOF
 [Unit]
-Description=EGI 채널 - $name (egi.channel/v1 채널 서버, ${bind_host}:${port})
+Description=KODEX 채널 - $name (kodex.channel/v1 채널 서버, ${bind_host}:${port})
 After=network-online.target
 Wants=network-online.target
 

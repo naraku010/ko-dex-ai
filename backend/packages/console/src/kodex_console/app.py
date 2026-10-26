@@ -25,7 +25,7 @@ def _ok(data: Any) -> dict[str, Any]:
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="EGI 채널 관제", version="1.0.0")
+    app = FastAPI(title="KODEX 채널 관제", version="1.0.0")
 
     @app.middleware("http")
     async def guard(request: Request, call_next):

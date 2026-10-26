@@ -7,7 +7,7 @@ from .paths import env_value, repo_root
 
 
 def service_name(channel: str) -> str:
-    return f"EgiChannel-{channel}"
+    return f"KodexChannel-{channel}"
 
 
 def package_name(channel: str) -> str:

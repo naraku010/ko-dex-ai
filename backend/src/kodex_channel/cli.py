@@ -1,7 +1,7 @@
 """저장소 루트에서 채널 하나를 띄운다.
 
-  uv run egi-channel
-  uv run egi-channel shop
+  uv run kodex-channel
+  uv run kodex-channel shop
 """
 
 from __future__ import annotations
@@ -52,7 +52,7 @@ def print_list(root: Path) -> int:
         port = _port(path)
         extra = f"  :{port}" if port else ""
         print(f"  {path.name}{extra}")
-    print("예: uv run egi-channel shop")
+    print("예: uv run kodex-channel shop")
     return 0
 
 
@@ -91,7 +91,7 @@ def main(argv: list[str] | None = None) -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
         sys.stderr.reconfigure(encoding="utf-8")
-    parser = argparse.ArgumentParser(description="egi 채널을 하나 띄웁니다.")
+    parser = argparse.ArgumentParser(description="kodex 채널을 하나 띄웁니다.")
     parser.add_argument("channel", nargs="?", help="channels 아래 폴더 이름. 예: shop")
     args = parser.parse_args(argv)
     try:

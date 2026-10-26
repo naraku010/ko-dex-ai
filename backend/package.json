@@ -1,10 +1,10 @@
 {
-  "name": "egi-channel",
+  "name": "kodex-channel",
   "private": true,
   "scripts": {
     "sync": "uv sync --all-packages",
     "dev:shop": "uv run --package shop-channel shop-channel",
-    "dev:console": "uv run --package egi-console egi-console",
+    "dev:console": "uv run --package kodex-console kodex-console",
     "seed:shop": "uv run --package shop-channel shop-seed"
   }
 }

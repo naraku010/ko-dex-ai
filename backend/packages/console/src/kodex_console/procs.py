@@ -139,7 +139,7 @@ def _child_env(name: str, workdir: Path) -> dict[str, str]:
     merged.update(_read_dotenv(_channel_dir(name) / ".env"))
     merged.update(_read_dotenv(workdir / ".env"))
     env.update(merged)
-    env["EGI_ROOT"] = str(repo_root())
+    env["KODEX_ROOT"] = str(repo_root())
     return env
 
 

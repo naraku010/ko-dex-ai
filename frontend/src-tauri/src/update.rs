@@ -4,7 +4,7 @@ use serde::Deserialize;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_updater::UpdaterExt;
 
-const RELEASES: &str = "https://api.github.com/repos/egibiz/egi-ai-chat/releases/latest";
+const RELEASES: &str = "https://api.github.com/repos/naraku010/ko-dex-ai/releases/latest";
 
 struct PendingUpdate {
     update: Mutex<Option<tauri_plugin_updater::Update>>,
@@ -22,7 +22,7 @@ struct GhRelease {
 }
 
 fn token() -> Result<&'static str, String> {
-    match option_env!("EGI_UPDATE_TOKEN").map(str::trim) {
+    match option_env!("KODEX_UPDATE_TOKEN").map(str::trim) {
         Some(value) if !value.is_empty() => Ok(value),
         _ => Err("업데이트 토큰이 빌드에 없습니다.".into()),
     }
@@ -35,13 +35,13 @@ fn fail(message: &str) -> impl Fn(&dyn std::fmt::Display) -> String + '_ {
 async fn manifest_url(token: &str) -> Result<String, String> {
     let _ = rustls::crypto::ring::default_provider().install_default();
     let response = reqwest::Client::builder()
-        .user_agent("egi-ai-chat")
+        .user_agent("kodex-ai-chat")
         .build()
         .map_err(|e| fail("업데이트 확인에 실패했습니다.")(&e))?
         .get(RELEASES)
         .header("Authorization", format!("Bearer {token}"))
         .header("Accept", "application/vnd.github+json")
-        .header("User-Agent", "egi-ai-chat")
+        .header("User-Agent", "kodex-ai-chat")
         .send()
         .await
         .map_err(|e| fail("업데이트 서버에 연결하지 못했습니다.")(&e))?;

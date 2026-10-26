@@ -74,7 +74,7 @@ export default function ChannelPanel() {
     <div>
       <div className="mb-4 flex items-start justify-between gap-4">
         <p className="text-xs leading-5" style={{ color: "var(--dc-muted)" }}>
-          채널은 AI가 쓸 수 있는 툴 묶음입니다. 채널 서버 URL을 넣으면 규격(egi.channel/v1)을 확인하고 그 툴만 올립니다.
+          채널은 AI가 쓸 수 있는 툴 묶음입니다. 채널 서버 URL을 넣으면 규격(kodex.channel/v1)을 확인하고 그 툴만 올립니다.
         </p>
         <button
           onClick={() => setAdding(true)}

@@ -1451,12 +1451,12 @@ const PICK_FILES_SCRIPT = [
 // 경로는 환경변수로 넘겨 따옴표·한글이 깨지지 않게 한다.
 const RECYCLE_SCRIPT = [
   'Add-Type -AssemblyName Microsoft.VisualBasic',
-  "[Microsoft.VisualBasic.FileIO.FileSystem]::DeleteFile($env:EGI_RECYCLE_PATH, 'OnlyErrorDialogs', 'SendToRecycleBin')",
+  "[Microsoft.VisualBasic.FileIO.FileSystem]::DeleteFile($env:KODEX_RECYCLE_PATH, 'OnlyErrorDialogs', 'SendToRecycleBin')",
 ].join('\r\n')
 
 function runPowerShell(name, body, env = {}) {
   if (process.platform !== 'win32') return Promise.reject(new Error('Windows에서만 됩니다.'))
-  const script = path.join(os.tmpdir(), `egi-${name}-${process.pid}.ps1`)
+  const script = path.join(os.tmpdir(), `kodex-${name}-${process.pid}.ps1`)
   fs.writeFileSync(script, `\uFEFF${body}\r\n`, 'utf8')
   return new Promise((resolve, reject) => {
     execFile(
@@ -1492,7 +1492,7 @@ const SAVE_SCRIPT = [
   '$dialog = New-Object System.Windows.Forms.SaveFileDialog',
   '$dialog.Title = "엑셀로 저장"',
   '$dialog.Filter = "Excel (*.xlsx)|*.xlsx"',
-  '$dialog.FileName = $env:EGI_SAVE_NAME',
+  '$dialog.FileName = $env:KODEX_SAVE_NAME',
   '$dialog.DefaultExt = "xlsx"',
   '$dialog.AddExtension = $true',
   'if ($dialog.ShowDialog($owner) -eq [System.Windows.Forms.DialogResult]::OK) { Write-Output $dialog.FileName }',
@@ -1501,7 +1501,7 @@ const SAVE_SCRIPT = [
 
 async function pickSaveFile(name) {
   const safe = String(name || '표').replace(/[\\/:*?"<>|]/g, ' ').trim().slice(0, 60) || '표'
-  const lines = await runPowerShell('save-xlsx', SAVE_SCRIPT, { EGI_SAVE_NAME: `${safe}.xlsx` })
+  const lines = await runPowerShell('save-xlsx', SAVE_SCRIPT, { KODEX_SAVE_NAME: `${safe}.xlsx` })
   return lines.pop() || null
 }
 
@@ -1528,7 +1528,7 @@ async function recycleLocalFile({ id, userId, rel }) {
   if (project.shared) throw new Error('공유 프로젝트 파일은 서버에서 지웁니다.')
   const target = safeRel(project, rel)
   if (!fs.existsSync(target.full)) throw new Error('파일을 찾을 수 없습니다.')
-  await runPowerShell('recycle', RECYCLE_SCRIPT, { EGI_RECYCLE_PATH: target.full })
+  await runPowerShell('recycle', RECYCLE_SCRIPT, { KODEX_RECYCLE_PATH: target.full })
   if (fs.existsSync(target.full)) throw new Error('휴지통으로 보내지 못했습니다.')
   dropIndex(project, target.rel)
   return { ok: true }

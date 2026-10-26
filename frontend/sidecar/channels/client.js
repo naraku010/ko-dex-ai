@@ -1,4 +1,4 @@
-// 채널 서버(egi.channel/v1)와 통신한다. manifest 받기 → 검증 → 툴 실행.
+// 채널 서버(kodex.channel/v1)와 통신한다. manifest 받기 → 검증 → 툴 실행.
 
 const { createHash, randomUUID } = require('crypto')
 const fs = require('fs')
@@ -9,7 +9,7 @@ const { assertToolSchema } = require('./schema')
 const { stripHeavy } = require('../mcp/tools/helpers')
 const mcpUi = require('../mcp/ui')
 
-const SPEC = 'egi.channel/v1'
+const SPEC = 'kodex.channel/v1'
 const DEFAULT_AUTH_HEADER = 'X-Channel-Key'
 const CREDENTIALS_HEADER = 'X-Channel-Credentials'
 const RESERVED_TOOLS = new Set(['whoami', 'render_chart', 'render_calendar', 'propose_followups', 'render_drawing_3d', 'use_skill'])
@@ -454,7 +454,7 @@ function safeFileName(value) {
 }
 
 function downloadsDir() {
-  const custom = String(process.env.EGI_DOWNLOAD_DIR || '').trim()
+  const custom = String(process.env.KODEX_DOWNLOAD_DIR || '').trim()
   return custom || path.join(os.homedir(), 'Downloads')
 }
 

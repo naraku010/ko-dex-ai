@@ -22,7 +22,7 @@ click==8.5.0
 fastapi==0.141.1
     # via
     #   channelkit
-    #   egi-console
+    #   kodex-console
 h11==0.16.0
     # via
     #   httpcore
@@ -34,7 +34,7 @@ httptools==0.8.0
 httpx==0.28.1
     # via
     #   channelkit
-    #   egi-console
+    #   kodex-console
 idna==3.19
     # via
     #   anyio
@@ -59,7 +59,7 @@ pyinstaller-hooks-contrib==2026.7
     # via pyinstaller
 python-dotenv==1.2.3
     # via
-    #   egi-console
+    #   kodex-console
     #   shop-channel
     #   uvicorn
 pywin32-ctypes==0.2.3 ; sys_platform == 'win32'
@@ -84,7 +84,7 @@ typing-inspection==0.4.4
     #   pydantic
 uvicorn==0.52.4
     # via
-    #   egi-console
+    #   kodex-console
     #   shop-channel
 uvloop==0.22.1 ; platform_python_implementation != 'PyPy' and sys_platform != 'cygwin' and sys_platform != 'win32'
     # via uvicorn

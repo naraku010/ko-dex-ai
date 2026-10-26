@@ -1,4 +1,4 @@
-"""pydantic 모델 → egi.channel/v1 manifest.
+"""pydantic 모델 → kodex.channel/v1 manifest.
 
 앱은 평면 object 스키마만 받는다(문자열·숫자·불린, 그리고 그 배열).
 pydantic이 만드는 anyOf/$ref/$defs/const를 여기서 평평하게 펴서 내보낸다.
@@ -13,7 +13,7 @@ from pydantic import BaseModel
 from .credentials import CredentialField
 from .registry import ToolRegistry, ToolSpec
 
-SPEC = "egi.channel/v1"
+SPEC = "kodex.channel/v1"
 PRIMITIVES = frozenset({"string", "number", "integer", "boolean"})
 CHANNEL_TYPES = frozenset({"data", "files"})
 CHANNEL_ICONS = frozenset({"files", "database", "factory", "shop", "cog"})

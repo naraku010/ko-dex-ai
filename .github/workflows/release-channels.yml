@@ -129,7 +129,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: egi-channels-${{ matrix.os }}
+          name: kodex-channels-${{ matrix.os }}
           path: |
             backend/dist/release/*.zip
             backend/dist/release/*.exe
@@ -156,7 +156,7 @@ jobs:
           body: |
             | OS | 파일 | 설치 |
             | --- | --- | --- |
-            | Windows x64 | `egi-channels-setup-*-windows-x64.exe` | 실행 후 다음 → 완료. 서비스 등록·API 키 생성까지 합니다 |
-            | Windows x64 | `egi-channels-*-windows-x64.zip` | 풀고 관리자 PowerShell에서 `.\install.ps1` |
-            | Linux x64 | `egi-channels-*-linux-x64.run` | `sudo sh egi-channels-*-linux-x64.run` |
-            | Linux x64 | `egi-channels-*-linux-x64.tar.gz` | 풀고 `sudo ./install.sh` |
+            | Windows x64 | `kodex-channels-setup-*-windows-x64.exe` | 실행 후 다음 → 완료. 서비스 등록·API 키 생성까지 합니다 |
+            | Windows x64 | `kodex-channels-*-windows-x64.zip` | 풀고 관리자 PowerShell에서 `.\install.ps1` |
+            | Linux x64 | `kodex-channels-*-linux-x64.run` | `sudo sh kodex-channels-*-linux-x64.run` |
+            | Linux x64 | `kodex-channels-*-linux-x64.tar.gz` | 풀고 `sudo ./install.sh` |

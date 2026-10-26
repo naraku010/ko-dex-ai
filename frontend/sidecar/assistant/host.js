@@ -610,7 +610,7 @@ async function drawingPages({ name, bytesBase64 } = {}) {
   const raw = String(bytesBase64 || '').replace(/\s/g, '')
   if (!raw) throw new Error('도면 파일이 비어 있습니다.')
   if (!String(name || '').toLowerCase().endsWith('.pdf')) return { pages: 1, items: [] }
-  const temp = path.join(os.tmpdir(), `egi-drawing-${randomUUID()}.pdf`)
+  const temp = path.join(os.tmpdir(), `kodex-drawing-${randomUUID()}.pdf`)
   fs.writeFileSync(temp, Buffer.from(raw, 'base64'))
   try {
     return { ...(await pdfText.drawingPages(temp)), max: attachments.MAX_RENDERS }
@@ -1141,7 +1141,7 @@ async function suggestFollowups({ question, answer } = {}) {
     : await detect({ adapterId: adapter.id })
   if (explainNotReady(adapter, detected)) return { items: [] }
 
-  const channelName = channels.store.getActive()?.name || 'EGI AI'
+  const channelName = channels.store.getActive()?.name || 'KODEX AI'
   const prompt = `방금 ${channelName} AI 비서 대화가 끝났습니다. 사용자가 이어서 물어볼 한국어 질문 5개만 만드세요.
 질문은 바로 보낼 수 있게 짧고 구체적으로, 오늘/어제/이번 주처럼 실제 조회에 쓸 표현으로.
 이미 답한 내용을 그대로 반복하지 마세요.

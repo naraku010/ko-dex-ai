@@ -109,8 +109,8 @@ Invoke-Nssm -NssmPath $nssmPath set $service Application $exe
 # .env는 exe 옆 또는 채널 폴더. frozen exe는 runtime_dir()에서도 읽는다.
 Invoke-Nssm -NssmPath $nssmPath set $service AppDirectory $appDir
 Invoke-Nssm -NssmPath $nssmPath set $service AppEnvironmentExtra "HOST=$BindHost" "PORT=$Port"
-Invoke-Nssm -NssmPath $nssmPath set $service DisplayName "EGI 채널 - $Channel"
-Invoke-Nssm -NssmPath $nssmPath set $service Description "egi.channel/v1 채널 서버 ($Channel). ${BindHost}:$Port"
+Invoke-Nssm -NssmPath $nssmPath set $service DisplayName "KODEX 채널 - $Channel"
+Invoke-Nssm -NssmPath $nssmPath set $service Description "kodex.channel/v1 채널 서버 ($Channel). ${BindHost}:$Port"
 Invoke-Nssm -NssmPath $nssmPath set $service Start SERVICE_AUTO_START
 Invoke-Nssm -NssmPath $nssmPath set $service AppExit Default Restart
 Invoke-Nssm -NssmPath $nssmPath set $service AppRestartDelay 5000
@@ -144,7 +144,7 @@ if ($loopback) {
 } else {
     Write-Line "앱에 넣을 주소 : http://<서버IP>:$Port"
     Write-Line "방화벽에서 이 포트를 열어야 외부에서 붙습니다."
-    Write-Line "  New-NetFirewallRule -DisplayName 'EGI channel $Channel' -Direction Inbound -Protocol TCP -LocalPort $Port -Action Allow"
+    Write-Line "  New-NetFirewallRule -DisplayName 'KODEX channel $Channel' -Direction Inbound -Protocol TCP -LocalPort $Port -Action Allow"
 
     # 이미지 주소가 루프백으로 남아 있으면 채널은 정상인데 앱에서 상품 사진만 안 나온다.
     $publicBase = Get-EnvValue -Path $envFile -Key 'PUBLIC_BASE_URL'

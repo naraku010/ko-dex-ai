@@ -123,7 +123,7 @@ Node.js 20 이상, Rust, Windows가 필요합니다.
 | --- | --- |
 | 런타임 | Python 3.11, uv |
 | API | FastAPI, Pydantic, Uvicorn |
-| 규격 | `egi.channel/v1`. `packages/channelkit`이 manifest, API 키, 도구 등록, 라우터를 맡습니다 |
+| 규격 | `kodex.channel/v1`. `packages/channelkit`이 manifest, API 키, 도구 등록, 라우터를 맡습니다 |
 | 배포 | OS별 설치 파일(Python 불필요), 또는 저장소째 올리고 NSSM/systemd 등록 |
 
 ### 채널 규격
@@ -156,8 +156,8 @@ Node.js 20 이상, Rust, Windows가 필요합니다.
 ```powershell
 cd backend
 uv sync --all-packages
-uv run egi-channel            # 채널 목록
-uv run egi-channel shop       # .env 가 없으면 .env.example 로 만들고 띄운다
+uv run kodex-channel            # 채널 목록
+uv run kodex-channel shop       # .env 가 없으면 .env.example 로 만들고 띄운다
 .\start-console.ps1           # 관제 (12000)
 ```
 
@@ -169,10 +169,10 @@ uv run egi-channel shop       # .env 가 없으면 .env.example 로 만들고 �
 
 | OS | 파일 | 형태 |
 | --- | --- | --- |
-| Windows x64 | `egi-channels-setup-<버전>-windows-x64.exe` | 설치 마법사 |
-| Windows x64 | `egi-channels-<버전>-windows-x64.zip` | 압축 + `install.ps1` |
-| Linux x64 | `egi-channels-<버전>-linux-x64.run` | 단일 파일 자동 설치 |
-| Linux x64 | `egi-channels-<버전>-linux-x64.tar.gz` | 압축 + `install.sh` |
+| Windows x64 | `kodex-channels-setup-<버전>-windows-x64.exe` | 설치 마법사 |
+| Windows x64 | `kodex-channels-<버전>-windows-x64.zip` | 압축 + `install.ps1` |
+| Linux x64 | `kodex-channels-<버전>-linux-x64.run` | 단일 파일 자동 설치 |
+| Linux x64 | `kodex-channels-<버전>-linux-x64.tar.gz` | 압축 + `install.sh` |
 
 두 OS 모두 설치할 때 하는 일은 같습니다.
 
@@ -187,8 +187,8 @@ uv run egi-channel shop       # .env 가 없으면 .env.example 로 만들고 �
 
 요구 사항: Windows 10 / Server 2016 이상 x64, 관리자 권한.
 
-1. `egi-channels-setup-<버전>-windows-x64.exe`를 실행합니다.
-2. 설치 폴더를 고릅니다. 기본은 `C:\Program Files\EGI Channels`입니다.
+1. `kodex-channels-setup-<버전>-windows-x64.exe`를 실행합니다.
+2. 설치 폴더를 고릅니다. 기본은 `C:\Program Files\KODEX Channels`입니다.
 3. 옵션을 고릅니다.
    - **Windows 서비스로 등록하고 시작**: 기본으로 켜져 있습니다. 끄면 `.env`만 만들어 둡니다.
    - **다른 PC에서 바로 접속 허용**: `HOST=0.0.0.0`으로 두고 방화벽 포트를 엽니다. 프록시를 둘 거면 끈 채로 둡니다.
@@ -196,11 +196,11 @@ uv run egi-channel shop       # .env 가 없으면 .env.example 로 만들고 �
 
 | 항목 | 위치 |
 | --- | --- |
-| 서비스 | `EgiChannel-<채널>` (자동 시작, 죽으면 5초 뒤 재시작) |
+| 서비스 | `KodexChannel-<채널>` (자동 시작, 죽으면 5초 뒤 재시작) |
 | 설정 | `<설치 폴더>\channels\<채널>\.env` |
 | 데이터 | `<설치 폴더>\channels\<채널>\data\` |
 | 로그 | `<설치 폴더>\logs\<채널>.out.log`, `.err.log` (10MB마다 교체) |
-| 제거 | 제어판 → 프로그램 제거 → EGI 채널 서버. 서비스와 방화벽 규칙을 지우고 `.env`와 데이터는 남깁니다 |
+| 제거 | 제어판 → 프로그램 제거 → KODEX 채널 서버. 서비스와 방화벽 규칙을 지우고 `.env`와 데이터는 남깁니다 |
 
 zip으로 받았으면 원하는 폴더에 풀고 관리자 PowerShell에서 실행합니다.
 
@@ -213,9 +213,9 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -NoService      # .env �
 서비스 관리는 다음과 같습니다.
 
 ```powershell
-Get-Service EgiChannel-*
-Restart-Service EgiChannel-shop          # .env 를 고친 뒤
-Get-Content "C:\Program Files\EGI Channels\logs\shop.err.log" -Tail 50 -Wait
+Get-Service KodexChannel-*
+Restart-Service KodexChannel-shop          # .env 를 고친 뒤
+Get-Content "C:\Program Files\KODEX Channels\logs\shop.err.log" -Tail 50 -Wait
 ```
 
 ### Linux
@@ -223,29 +223,29 @@ Get-Content "C:\Program Files\EGI Channels\logs\shop.err.log" -Tail 50 -Wait
 요구 사항: x64, systemd, glibc 2.31 이상 (Ubuntu 20.04+, Debian 11+, Rocky/RHEL 9+), root 권한.
 
 ```bash
-sudo sh egi-channels-<버전>-linux-x64.run                       # 기본 설치 (/opt/egi-channels)
-sudo sh egi-channels-<버전>-linux-x64.run --host 0.0.0.0        # 다른 PC에서 바로 접속
-sudo sh egi-channels-<버전>-linux-x64.run --channel shop        # 채널 골라서
-sh egi-channels-<버전>-linux-x64.run --extract ./egi            # 풀기만
+sudo sh kodex-channels-<버전>-linux-x64.run                       # 기본 설치 (/opt/kodex-channels)
+sudo sh kodex-channels-<버전>-linux-x64.run --host 0.0.0.0        # 다른 PC에서 바로 접속
+sudo sh kodex-channels-<버전>-linux-x64.run --channel shop        # 채널 골라서
+sh kodex-channels-<버전>-linux-x64.run --extract ./kodex            # 풀기만
 ```
 
-tar.gz로 받았으면 `tar xzf egi-channels-<버전>-linux-x64.tar.gz && sudo ./egi-channels-<버전>-linux-x64/install.sh`입니다.
+tar.gz로 받았으면 `tar xzf kodex-channels-<버전>-linux-x64.tar.gz && sudo ./kodex-channels-<버전>-linux-x64/install.sh`입니다.
 
 | 옵션 | 설명 |
 | --- | --- |
-| `--prefix DIR` | 설치 폴더. 기본 `/opt/egi-channels` |
+| `--prefix DIR` | 설치 폴더. 기본 `/opt/kodex-channels` |
 | `--channel NAME` | 이 채널만. 여러 번 쓰거나 쉼표로 잇습니다 |
 | `--host ADDR` | 새로 만드는 `.env`의 `HOST`. `0.0.0.0`이면 `PUBLIC_BASE_URL`도 서버 IP로 맞춥니다 |
-| `--user NAME` | 서비스 실행 계정. 기본 `egi-channel` (없으면 로그인 불가 시스템 계정으로 생성) |
+| `--user NAME` | 서비스 실행 계정. 기본 `kodex-channel` (없으면 로그인 불가 시스템 계정으로 생성) |
 | `--no-service` | 파일과 `.env`만 준비 |
 
 | 항목 | 위치 |
 | --- | --- |
-| 서비스 | `egi-channel-<채널>.service` (부팅 시 시작, 죽으면 5초 뒤 재시작) |
-| 설정 | `/opt/egi-channels/channels/<채널>/.env` (권한 600, 서비스 계정 소유) |
-| 데이터 | `/opt/egi-channels/channels/<채널>/data/` |
-| 로그 | `journalctl -u egi-channel-<채널> -f` |
-| 제거 | `sudo /opt/egi-channels/uninstall.sh` (서비스만), `--purge` (폴더까지) |
+| 서비스 | `kodex-channel-<채널>.service` (부팅 시 시작, 죽으면 5초 뒤 재시작) |
+| 설정 | `/opt/kodex-channels/channels/<채널>/.env` (권한 600, 서비스 계정 소유) |
+| 데이터 | `/opt/kodex-channels/channels/<채널>/data/` |
+| 로그 | `journalctl -u kodex-channel-<채널> -f` |
+| 제거 | `sudo /opt/kodex-channels/uninstall.sh` (서비스만), `--purge` (폴더까지) |
 
 `HOST=0.0.0.0`이면 방화벽에서 포트를 엽니다. 예: `sudo ufw allow 12001/tcp`, `sudo firewall-cmd --add-port=12001/tcp --permanent && sudo firewall-cmd --reload`.
 
@@ -300,7 +300,7 @@ Windows 패키지에 넣을 `nssm.exe`는 `--nssm C:\tools\nssm.exe`로 줍니�
 패키지 안의 모양은 두 OS가 같습니다.
 
 ```
-egi-channels-<버전>-<os>-x64/
+kodex-channels-<버전>-<os>-x64/
   VERSION, README.txt
   install.ps1, uninstall.ps1, tools/nssm.exe     Windows
   install.sh, uninstall.sh                       Linux
@@ -339,7 +339,7 @@ egi-channels-<버전>-<os>-x64/
 
 | 증상 | 확인할 것 |
 | --- | --- |
-| 설치 끝에 `/health가 응답하지 않습니다` | Windows `logs\<채널>.err.log`, Linux `journalctl -u egi-channel-<채널> -n 50`. 포트 충돌이면 `.env`의 `PORT`를 바꾸고 다시 설치합니다 |
+| 설치 끝에 `/health가 응답하지 않습니다` | Windows `logs\<채널>.err.log`, Linux `journalctl -u kodex-channel-<채널> -n 50`. 포트 충돌이면 `.env`의 `PORT`를 바꾸고 다시 설치합니다 |
 | 처음 시작이 느림 | shop은 처음 뜰 때 1년치 데모 DB를 만듭니다. 최대 1분 정도 걸립니다 |
 | 앱에서 채널은 붙는데 상품 사진만 안 보임 | `PUBLIC_BASE_URL`이 `127.0.0.1`로 남아 있습니다. 앱에 등록한 주소로 바꾸고 재시작합니다 |
 | 다른 PC에서 안 붙음 | `HOST=0.0.0.0`인지, 방화벽 포트가 열렸는지 확인합니다 |

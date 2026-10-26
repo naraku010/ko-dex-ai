@@ -5,14 +5,14 @@ from pathlib import Path
 
 
 def repo_root() -> Path:
-    explicit = os.getenv("EGI_ROOT", "").strip()
+    explicit = os.getenv("KODEX_ROOT", "").strip()
     if explicit:
         return Path(explicit).resolve()
     here = Path(__file__).resolve()
     for path in (here, *here.parents):
         if (path / "channels").is_dir() and (path / "packages").is_dir():
             return path
-    raise FileNotFoundError("저장소 루트를 찾지 못했습니다. EGI_ROOT를 지정해주세요.")
+    raise FileNotFoundError("저장소 루트를 찾지 못했습니다. KODEX_ROOT를 지정해주세요.")
 
 
 def set_env_value(path: Path, key: str, value: str) -> None:

@@ -48,7 +48,7 @@ function rasterize(pdfPath, pngPath, page = 1) {
   if (process.platform !== 'win32') {
     return Promise.reject(new Error('PDF 페이지는 Windows에서만 이미지로 만들 수 있습니다.'))
   }
-  const script = path.join(os.tmpdir(), `egi-pdf-page-${process.pid}.ps1`)
+  const script = path.join(os.tmpdir(), `kodex-pdf-page-${process.pid}.ps1`)
   fs.writeFileSync(script, `${SCRIPT}\r\n`, 'utf8')
   return new Promise((resolve, reject) => {
     execFile(
@@ -98,7 +98,7 @@ function rasterizeAll(pdfPath, outDir, maxPages = 80) {
   }
   fs.rmSync(outDir, { recursive: true, force: true })
   fs.mkdirSync(outDir, { recursive: true })
-  const script = path.join(os.tmpdir(), `egi-pdf-pages-${process.pid}-${Date.now()}.ps1`)
+  const script = path.join(os.tmpdir(), `kodex-pdf-pages-${process.pid}-${Date.now()}.ps1`)
   fs.writeFileSync(script, `${ALL_PAGES}\r\n`, 'utf8')
   return new Promise((resolve, reject) => {
     execFile(

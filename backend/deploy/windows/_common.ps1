@@ -6,10 +6,10 @@
 
 # UTF-8 스크립트 + 구형 콘솔(PS 4). 코드페이지를 먼저 맞추지 않으면 한글이 깨진다.
 try {
-    $script:EgiUtf8 = New-Object System.Text.UTF8Encoding $false
-    [Console]::InputEncoding = $script:EgiUtf8
-    [Console]::OutputEncoding = $script:EgiUtf8
-    $OutputEncoding = $script:EgiUtf8
+    $script:KodexUtf8 = New-Object System.Text.UTF8Encoding $false
+    [Console]::InputEncoding = $script:KodexUtf8
+    [Console]::OutputEncoding = $script:KodexUtf8
+    $OutputEncoding = $script:KodexUtf8
     chcp 65001 > $null
 } catch { }
 
@@ -45,7 +45,7 @@ function Assert-Admin {
 
 function Get-ServiceName {
     param([Parameter(Mandatory)][string]$Channel)
-    "EgiChannel-$Channel"
+    "KodexChannel-$Channel"
 }
 
 # .env에서 값 하나를 읽는다. 주석과 앞뒤 공백, 따옴표는 걷어낸다.

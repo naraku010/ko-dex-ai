@@ -274,7 +274,7 @@ export default function ChatView() {
       <header className="flex h-12 items-center justify-between px-4 shadow-[0_1px_0_var(--dc-border)]">
         <div className="min-w-0">
           <h1 className="truncate text-sm font-semibold" style={{ color: "var(--dc-text)" }}>
-            {current?.title ?? channel?.name ?? "EGI AI"}
+            {current?.title ?? channel?.name ?? "KODEX AI"}
           </h1>
           <p className="text-[11px]" style={{ color: busy ? "var(--dc-blurple)" : status?.connected ? "var(--dc-online)" : "var(--dc-faint)" }}>
             {busy
@@ -317,7 +317,7 @@ export default function ChatView() {
               <AppMark size={64} />
             </div>
             <h2 className="text-xl font-semibold" style={{ color: "var(--dc-text)" }}>
-              {channel?.name ?? "EGI AI"}
+              {channel?.name ?? "KODEX AI"}
             </h2>
             <p className="mt-2 text-sm" style={{ color: "var(--dc-muted)" }}>
               {channel?.description || `이 채널의 툴 ${channel?.toolCount ?? 0}개로 답합니다. 무엇을 조회할까요?`}

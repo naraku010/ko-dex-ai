@@ -1,4 +1,4 @@
-"""egi.channel/v1 채널 서버 코어."""
+"""kodex.channel/v1 채널 서버 코어."""
 
 from .credentials import CredentialField, Credentials
 from .downloads import publish_file

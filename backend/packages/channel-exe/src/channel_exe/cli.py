@@ -17,7 +17,7 @@ from .release import make_release, project_version
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="egi 채널을 실행 파일로 묶습니다 (Windows exe / Linux 바이너리).")
+    parser = argparse.ArgumentParser(description="kodex 채널을 실행 파일로 묶습니다 (Windows exe / Linux 바이너리).")
     parser.add_argument("channel", nargs="?", help="channels 아래 폴더 이름. 예: shop")
     parser.add_argument("--all", action="store_true", help="channels 아래 채널을 모두 묶습니다.")
     parser.add_argument(

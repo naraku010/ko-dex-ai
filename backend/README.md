@@ -1,8 +1,8 @@
-# egi-channel
+# kodex-channel
 
-`egi-ai` 데스크톱 앱이 URL로 붙는 채널 서버들. **채널 하나 = 프로젝트 하나**입니다. 한 서버에 다 몰지 않고 따로 뜨고, 따로 배포하고, 따로 API 키를 씁니다.
+`kodex-ai` 데스크톱 앱이 URL로 붙는 채널 서버들. **채널 하나 = 프로젝트 하나**입니다. 한 서버에 다 몰지 않고 따로 뜨고, 따로 배포하고, 따로 API 키를 씁니다.
 
-공통 규격(egi.channel/v1)은 `packages/channelkit`이 담당하고, 채널 프로젝트는 툴과 프롬프트만 씁니다.
+공통 규격(kodex.channel/v1)은 `packages/channelkit`이 담당하고, 채널 프로젝트는 툴과 프롬프트만 씁니다.
 
 ```
 packages/channelkit     규격 코어 (manifest·API 키·툴 레지스트리·라우터)
@@ -18,8 +18,8 @@ templates/channel       새 채널 스캐폴드
 ```powershell
 cd backend
 uv sync --all-packages
-uv run egi-channel            # 채널 목록
-uv run egi-channel shop       # 쇼핑몰 데모 — 12001
+uv run kodex-channel            # 채널 목록
+uv run kodex-channel shop       # 쇼핑몰 데모 — 12001
 .\start-console.ps1           # 관제 — 12000
 ```
 
@@ -51,7 +51,7 @@ uv run --package shop-channel shop-channel   # http://127.0.0.1:12001
 다른 PC에서는 `http://<서버IP>:12000/?token=...` 로 엽니다. `HOST=0.0.0.0`이고 토큰이 비어 있으면 처음 실행할 때 `CONSOLE_TOKEN`을 만들어 `.env`에 넣습니다. 방화벽에서 12000을 열어야 합니다.
 
 ```powershell
-New-NetFirewallRule -DisplayName 'EGI console' -Direction Inbound -Protocol TCP -LocalPort 12000 -Action Allow
+New-NetFirewallRule -DisplayName 'KODEX console' -Direction Inbound -Protocol TCP -LocalPort 12000 -Action Allow
 ```
 
 서버에서 관리자 권한으로 띄우면 **업데이트**가 `deploy-channels.ps1`을 그대로 돌립니다(git fetch, 바뀐 채널 NSSM 재시작). 권한이 없으면 git reset과 로컬 프로세스만 재시작합니다.
@@ -68,7 +68,7 @@ New-NetFirewallRule -DisplayName 'EGI console' -Direction Inbound -Protocol TCP 
 서버에는 git, Python 3.11+, [NSSM](https://nssm.cc)만 있으면 됩니다. uv는 필요 없고,
 의존성은 `requirements.txt`(uv.lock에서 뽑은 고정 버전)로 설치합니다.
 
-Python 없이 올리려면 **OS별 설치 파일**을 씁니다. Windows는 `egi-channels-setup-<버전>-windows-x64.exe`, Linux는 `egi-channels-<버전>-linux-x64.run`입니다.
+Python 없이 올리려면 **OS별 설치 파일**을 씁니다. Windows는 `kodex-channels-setup-<버전>-windows-x64.exe`, Linux는 `kodex-channels-<버전>-linux-x64.run`입니다.
 설치 파일이 서비스 등록, API 키 생성, 헬스체크까지 합니다. 사용법과 빌드 방법은 [루트 README](../README.md#채널-서버-배포-windowslinux-설치-파일)에 있습니다.
 
 ```powershell
@@ -88,8 +88,8 @@ uv run --package channel-exe channel-exe --all --release --version 1.0.0
 
 ```powershell
 # 관리자 PowerShell
-git clone https://github.com/egibiz/egi-ai-channel.git C:\egi-channel
-cd C:\egi-channel
+git clone https://github.com/naraku010/ko-dex-ai.git C:\kodex-channel
+cd C:\kodex-channel
 
 # 이 서버에서 돌릴 채널만 .env를 만든다. CHANNEL_API_KEYS와 PORT는 반드시 채운다.
 Copy-Item channels\shop\.env.example channels\shop\.env
@@ -144,7 +144,7 @@ git에서 받은 뒤, 바뀐 내용에 따라 필요한 일만 합니다.
 ```powershell
 notepad channels\shop\.env          # HOST=0.0.0.0
 .\deploy\windows\deploy-channels.ps1 -Force
-New-NetFirewallRule -DisplayName 'EGI channel shop' -Direction Inbound -Protocol TCP -LocalPort 12001 -Action Allow
+New-NetFirewallRule -DisplayName 'KODEX channel shop' -Direction Inbound -Protocol TCP -LocalPort 12001 -Action Allow
 ```
 
 이미지를 서비스하는 채널(`shop`)은 `PUBLIC_BASE_URL`도 앱에 등록할 주소와 똑같이 맞춰야 합니다.

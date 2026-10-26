@@ -1,13 +1,13 @@
 """빌드한 채널들을 OS별 설치 패키지로 묶는다.
 
-Windows  egi-channels-<버전>-windows-x64.zip
-         egi-channels-setup-<버전>-windows-x64.exe   (Inno Setup이 있을 때)
-Linux    egi-channels-<버전>-linux-x64.tar.gz
-         egi-channels-<버전>-linux-x64.run           (자동 설치 단일 파일)
+Windows  kodex-channels-<버전>-windows-x64.zip
+         kodex-channels-setup-<버전>-windows-x64.exe   (Inno Setup이 있을 때)
+Linux    kodex-channels-<버전>-linux-x64.tar.gz
+         kodex-channels-<버전>-linux-x64.run           (자동 설치 단일 파일)
 
 패키지 안의 모양은 두 OS가 같다.
 
-  egi-channels-<버전>-<os>-x64/
+  kodex-channels-<버전>-<os>-x64/
     VERSION
     README.txt
     install.* / uninstall.*
@@ -29,7 +29,7 @@ from pathlib import Path
 
 from .build import IS_WINDOWS
 
-PRODUCT = "egi-channels"
+PRODUCT = "kodex-channels"
 
 
 def os_tag() -> str:

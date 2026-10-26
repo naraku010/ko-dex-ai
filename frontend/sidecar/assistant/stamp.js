@@ -65,8 +65,8 @@ const SCRIPT = [
 function stamp(imagePath, { tag = '', logo: withLogo = false } = {}) {
   if (process.platform !== 'win32' || (!tag && !withLogo)) return Promise.resolve(imagePath)
   const id = randomUUID()
-  const script = path.join(os.tmpdir(), `egi-stamp-${id}.ps1`)
-  const logo = withLogo ? path.join(os.tmpdir(), `egi-stamp-${id}.png`) : ''
+  const script = path.join(os.tmpdir(), `kodex-stamp-${id}.ps1`)
+  const logo = withLogo ? path.join(os.tmpdir(), `kodex-stamp-${id}.png`) : ''
   fs.writeFileSync(script, `${SCRIPT}\r\n`, 'utf8')
   if (logo) fs.writeFileSync(logo, Buffer.from(LOGO_BASE64, 'base64'))
   return new Promise((resolve, reject) => {

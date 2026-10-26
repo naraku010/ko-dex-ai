@@ -1,7 +1,7 @@
 [project]
 name = "channel-exe"
 version = "1.0.0"
-description = "egi 채널을 실행 파일과 설치 패키지로 묶는다 (Windows·Linux). 저장소 루트에서 실행한다."
+description = "kodex 채널을 실행 파일과 설치 패키지로 묶는다 (Windows·Linux). 저장소 루트에서 실행한다."
 requires-python = ">=3.11"
 # 묶을 채널 패키지는 uv sync --all-packages 로 같은 venv에 깔린다.
 dependencies = [

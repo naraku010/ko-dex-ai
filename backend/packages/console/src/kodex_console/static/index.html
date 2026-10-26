@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>EGI 채널 관제</title>
+  <title>KODEX 채널 관제</title>
   <style>
     :root {
       --bg: #0f1115;
@@ -115,7 +115,7 @@
 <body>
   <header>
     <div>
-      <h1>EGI 채널 관제</h1>
+      <h1>KODEX 채널 관제</h1>
       <div class="sub" id="gitLine">저장소 상태를 읽는 중…</div>
     </div>
     <div class="actions">
@@ -210,10 +210,10 @@
       renderHistory(name);
     }
     const params = new URLSearchParams(location.search);
-    const stored = localStorage.getItem("egi-console-token") || "";
+    const stored = localStorage.getItem("kodex-console-token") || "";
     $("token").value = params.get("token") || stored;
     $("token").addEventListener("change", () => {
-      localStorage.setItem("egi-console-token", $("token").value.trim());
+      localStorage.setItem("kodex-console-token", $("token").value.trim());
       run(reload);
     });
 

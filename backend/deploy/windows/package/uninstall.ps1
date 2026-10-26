@@ -1,6 +1,6 @@
 ﻿<#
 .SYNOPSIS
-EGI 채널 서버의 Windows 서비스를 멈추거나 지운다.
+KODEX 채널 서버의 Windows 서비스를 멈추거나 지운다.
 
 .DESCRIPTION
 이 설치 폴더의 채널만 다룬다. 저장소에서 직접 등록한 서비스(다른 경로의 exe)는 건드리지 않는다.
@@ -25,7 +25,7 @@ if (-not (Test-Path $channels)) { exit 0 }
 
 foreach ($folder in Get-ChildItem $channels -Directory) {
     $name = $folder.Name
-    $service = "EgiChannel-$name"
+    $service = "KodexChannel-$name"
     $svc = Get-CimInstance Win32_Service -Filter "Name='$service'" -ErrorAction SilentlyContinue
     if ($svc) {
         # NSSM 서비스의 PathName은 nssm.exe다. 실제 실행 파일은 NSSM 설정에서 확인한다.
@@ -42,7 +42,7 @@ foreach ($folder in Get-ChildItem $channels -Directory) {
         # 새 버전과 섞이지 않게 옛 라이브러리를 비운다. .env, data\ 는 남는다.
         Remove-Item (Join-Path $folder.FullName '_internal') -Recurse -Force -ErrorAction SilentlyContinue
     } else {
-        Get-NetFirewallRule -DisplayName "EGI channel $name" -ErrorAction SilentlyContinue | Remove-NetFirewallRule
+        Get-NetFirewallRule -DisplayName "KODEX channel $name" -ErrorAction SilentlyContinue | Remove-NetFirewallRule
     }
 }
 exit 0

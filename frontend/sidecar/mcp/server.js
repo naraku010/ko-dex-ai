@@ -11,7 +11,7 @@ const { registerTools } = require('./tools')
 const channelStore = require('../channels/store')
 
 const MCP_PATH = '/mcp'
-const SERVER_NAME = 'egi'
+const SERVER_NAME = 'kodex'
 const MAX_BODY_BYTES = 4 * 1024 * 1024
 
 let httpServer = null
@@ -224,7 +224,7 @@ function buildMcpConfig() {
 async function openLocalClient() {
   const mcp = createMcpServerInstance()
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair()
-  const client = new Client({ name: 'egi-api', version: appVersion() })
+  const client = new Client({ name: 'kodex-api', version: appVersion() })
   try {
     await mcp.connect(serverTransport)
     await client.connect(clientTransport)

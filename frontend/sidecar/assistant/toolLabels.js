@@ -21,7 +21,7 @@ function setChannelLabels(tools) {
   channelLabels = next
 }
 
-// rawName 예: "mcp__egi__whoami"(Claude) 또는 "whoami"(Codex). 서버 접두어를 떼고 라벨을 찾는다.
+// rawName 예: "mcp__kodex__whoami"(Claude) 또는 "whoami"(Codex). 서버 접두어를 떼고 라벨을 찾는다.
 function toolLabel(rawName, serverName) {
   let short = String(rawName || '')
   if (serverName) short = short.replace(new RegExp(`^mcp__${serverName}__`), '')

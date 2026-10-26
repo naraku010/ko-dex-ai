@@ -9,8 +9,8 @@ const { buildSystemPrompt } = require('../prompt')
 const { toolLabel: sharedToolLabel } = require('../toolLabels')
 
 const COMMAND = 'codex'
-const MCP_SERVER_NAME = 'egi'
-const MCP_TOKEN_ENV = 'EGI_MCP_TOKEN'
+const MCP_SERVER_NAME = 'kodex'
+const MCP_TOKEN_ENV = 'KODEX_MCP_TOKEN'
 
 // 'default'는 -m을 넘기지 않고 codex config.toml 또는 계정의 권장 모델을 그대로 쓴다.
 // 계정(요금제)과 롤아웃마다 사용 가능한 모델이 달라, 강제로 지정하면 실패할 수 있어 기본은 CLI 설정을 따른다.
@@ -480,7 +480,7 @@ function promptOnce({ located, prompt, model }) {
 
 // 빈 폴더에서 돌려야 에이전트가 원본 폴더를 뒤지며 시간을 쓰지 않는다.
 function emptyDir() {
-  const dir = path.join(os.tmpdir(), 'egi-codex-read')
+  const dir = path.join(os.tmpdir(), 'kodex-codex-read')
   fs.mkdirSync(dir, { recursive: true })
   return dir
 }

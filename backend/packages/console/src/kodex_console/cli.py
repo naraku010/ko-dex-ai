@@ -49,7 +49,7 @@ def _ensure_token(host: str) -> str:
 
 def main() -> None:
     _load_env()
-    parser = argparse.ArgumentParser(description="EGI 채널 관제")
+    parser = argparse.ArgumentParser(description="KODEX 채널 관제")
     parser.add_argument("--host", default=os.getenv("HOST", "0.0.0.0"))
     parser.add_argument("--port", type=int, default=int(os.getenv("PORT", "12000")))
     parser.add_argument("--no-browser", action="store_true")
@@ -69,7 +69,7 @@ def main() -> None:
 
     import uvicorn
 
-    uvicorn.run("egi_console.app:app", host=args.host, port=args.port, reload=False)
+    uvicorn.run("kodex_console.app:app", host=args.host, port=args.port, reload=False)
 
 
 if __name__ == "__main__":

@@ -84,7 +84,7 @@ export default function DiscordShell() {
         <button
           onClick={openChat}
           className="flex h-12 w-12 shrink-0 items-center justify-center"
-          title="EGI AI"
+          title="KODEX AI"
         >
           <AppMark size={48} />
         </button>
@@ -152,7 +152,7 @@ export default function DiscordShell() {
       <aside className="flex w-60 shrink-0 flex-col" style={{ background: "var(--dc-sidebar)" }}>
         <div className="flex h-12 flex-col justify-center px-4 shadow-[0_1px_0_var(--dc-border)]">
           <span className="truncate text-sm font-semibold" style={{ color: "var(--dc-text)" }}>
-            {activeChannel?.name ?? (channels.length === 0 ? "채널 없음" : "EGI AI")}
+            {activeChannel?.name ?? (channels.length === 0 ? "채널 없음" : "KODEX AI")}
           </span>
           {activeChannel && !activeChannel.credentialsReady ? (
             <button

@@ -29,7 +29,7 @@ param(
     # nssm이 SYSTEM의 PATH에 없으면 (winget 설치는 사용자 범위일 수 있다) 절대 경로를 준다.
     [string]$Nssm = 'nssm',
 
-    [string]$TaskName = 'EGI 채널 자동 갱신',
+    [string]$TaskName = 'KODEX 채널 자동 갱신',
 
     # 등록을 지운다
     [switch]$Remove

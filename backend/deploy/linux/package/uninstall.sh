@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #
-# EGI 채널 서버 제거 (Linux)
+# KODEX 채널 서버 제거 (Linux)
 #
-#   sudo /opt/egi-channels/uninstall.sh            # 서비스만 지운다. .env 와 data/ 는 남긴다
-#   sudo /opt/egi-channels/uninstall.sh --purge    # 설치 폴더까지 통째로 지운다
+#   sudo /opt/kodex-channels/uninstall.sh            # 서비스만 지운다. .env 와 data/ 는 남긴다
+#   sudo /opt/kodex-channels/uninstall.sh --purge    # 설치 폴더까지 통째로 지운다
 
 set -euo pipefail
 
@@ -15,7 +15,7 @@ PURGE=0
 PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if command -v systemctl >/dev/null 2>&1; then
-    for unit in /etc/systemd/system/egi-channel-*.service; do
+    for unit in /etc/systemd/system/kodex-channel-*.service; do
         [[ -f "$unit" ]] || continue
         # 이 설치 폴더의 채널만 지운다. 저장소에서 직접 등록한 서비스는 건드리지 않는다.
         grep -q "^ExecStart=$PREFIX/" "$unit" || continue

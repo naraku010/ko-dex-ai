@@ -1,8 +1,8 @@
 import type { ChatMessage, Conversation } from '@/types/assistant'
 import { isTauri } from './tauri'
 
-const CONV_KEY = (userId: string) => `egi.conversations.${userId}`
-const MSG_KEY = (conversationId: string) => `egi.messages.${conversationId}`
+const CONV_KEY = (userId: string) => `kodex.conversations.${userId}`
+const MSG_KEY = (conversationId: string) => `kodex.messages.${conversationId}`
 
 let sqlite: Awaited<ReturnType<typeof loadSqlite>> | null = null
 let initPromise: Promise<void> | null = null

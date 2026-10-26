@@ -30,7 +30,7 @@ git에서 최신 코드를 받아 채널들을 배포하거나 갱신한다.
 
 .EXAMPLE
   # 최초 배포: 저장소가 없으면 clone까지 한다
-  .\deploy-channels.ps1 -Root C:\egi-channel -Repo https://github.com/egibiz/egi-ai-channel.git
+  .\deploy-channels.ps1 -Root C:\kodex-channel -Repo https://github.com/naraku010/ko-dex-ai.git
 
 .EXAMPLE
   # 변경이 없어도 강제로 재설치·재시작
@@ -49,7 +49,7 @@ param(
     [string]$Root,
 
     # $Root가 저장소가 아닐 때 clone할 주소
-    [string]$Repo = 'https://github.com/egibiz/egi-ai-channel.git',
+    [string]$Repo = 'https://github.com/naraku010/ko-dex-ai.git',
 
     [string]$Branch = 'master',
 

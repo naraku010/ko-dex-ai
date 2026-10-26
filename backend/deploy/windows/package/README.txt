@@ -1,7 +1,7 @@
-﻿EGI 채널 서버 - Windows x64
+﻿KODEX 채널 서버 - Windows x64
 ===========================
 
-Python 없이 도는 채널 서버 실행 파일 묶음입니다. 채널마다 Windows 서비스 하나(EgiChannel-<채널>)로 뜹니다.
+Python 없이 도는 채널 서버 실행 파일 묶음입니다. 채널마다 Windows 서비스 하나(KodexChannel-<채널>)로 뜹니다.
 Windows 10 / Server 2016 이상, 관리자 권한이 필요합니다.
 
 설치
@@ -25,7 +25,7 @@ Windows 10 / Server 2016 이상, 관리자 권한이 필요합니다.
     PORT              채널마다 다르게
     PUBLIC_BASE_URL   shop 채널 상품 사진 주소. 앱에 등록한 주소와 같게
 
-  바꾼 뒤: Restart-Service EgiChannel-<채널>
+  바꾼 뒤: Restart-Service KodexChannel-<채널>
   HOST/PORT 를 바꿨으면 install.ps1 을 다시 실행하면 서비스 설명과 방화벽까지 다시 맞춥니다.
 
 갱신
@@ -35,4 +35,4 @@ Windows 10 / Server 2016 이상, 관리자 권한이 필요합니다.
 로그 / 제거
 -----------
   <설치 폴더>\logs\<채널>.out.log, <채널>.err.log
-  제어판 → 프로그램 제거 → "EGI 채널 서버". 서비스와 방화벽 규칙을 지우고, .env 와 데이터는 남깁니다.
+  제어판 → 프로그램 제거 → "KODEX 채널 서버". 서비스와 방화벽 규칙을 지우고, .env 와 데이터는 남깁니다.

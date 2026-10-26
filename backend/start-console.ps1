@@ -29,7 +29,7 @@ if (-not (Test-Path $envFile) -and (Test-Path $example)) {
     Write-Host ".env를 만들었습니다: $envFile"
 }
 
-$exe = Join-Path $root '.venv\Scripts\egi-console.exe'
+$exe = Join-Path $root '.venv\Scripts\kodex-console.exe'
 $consoleArgs = @('--host', $BindHost, '--port', "$Port")
 if ($NoBrowser) { $consoleArgs += '--no-browser' }
 
@@ -42,8 +42,8 @@ if (Test-Path $exe) {
 
 if (Get-Command uv -ErrorAction SilentlyContinue) {
     Write-Host "관제: http://<서버IP>:$Port/"
-    & uv run --package egi-console egi-console @consoleArgs
+    & uv run --package kodex-console kodex-console @consoleArgs
     exit $LASTEXITCODE
 }
 
-throw "egi-console을 찾지 못했습니다. 저장소에서 uv sync --all-packages 를 먼저 실행하세요."
+throw "kodex-console을 찾지 못했습니다. 저장소에서 uv sync --all-packages 를 먼저 실행하세요."

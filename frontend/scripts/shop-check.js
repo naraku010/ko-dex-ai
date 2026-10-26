@@ -1,5 +1,5 @@
 // shop 채널을 앱 경로로 붙여본다. manifest 검증 → 툴 호출 → 카드 UI 이벤트까지 확인.
-// 사용법: egi-channel에서 shop-channel을 띄운 뒤 node scripts/shop-check.js
+// 사용법: kodex-channel에서 shop-channel을 띄운 뒤 node scripts/shop-check.js
 
 const client = require('../sidecar/channels/client')
 const mcpUi = require('../sidecar/mcp/ui')

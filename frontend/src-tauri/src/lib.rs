@@ -48,7 +48,7 @@ pub fn run() {
             let icon = Image::from_bytes(include_bytes!("../icons/icon.png"))?;
             if let Some(win) = app.get_webview_window("main") {
                 win.set_icon(icon)?;
-                let name = app.config().product_name.clone().unwrap_or_else(|| "EGI AI".into());
+                let name = app.config().product_name.clone().unwrap_or_else(|| "KODEX AI".into());
                 win.set_title(&format!("{} v{}", name, app.package_info().version))?;
             }
             Ok(())

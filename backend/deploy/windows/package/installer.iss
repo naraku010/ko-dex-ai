@@ -1,4 +1,4 @@
-﻿; EGI 채널 서버 설치 마법사 (Inno Setup 6)
+﻿; KODEX 채널 서버 설치 마법사 (Inno Setup 6)
 ;
 ; 직접 부르지 않는다. channel-exe --release 가 아래 값을 넘겨 컴파일한다.
 ;   /DAppVersion=1.0.0 /DSourceDir=<패키지 폴더> /DOutputDir=<출력 폴더> /DOutputName=<파일 이름>
@@ -13,17 +13,17 @@
   #define OutputDir "."
 #endif
 #ifndef OutputName
-  #define OutputName "egi-channels-setup"
+  #define OutputName "kodex-channels-setup"
 #endif
 #define AppIcon AddBackslash(SourcePath) + "..\..\..\..\frontend\src-tauri\icons\icon.ico"
 
 [Setup]
 AppId={{5B7E2C14-3A9D-4F61-8C2E-9D0A6B1F7E43}
-AppName=EGI 채널 서버
+AppName=KODEX 채널 서버
 AppVersion={#AppVersion}
-AppVerName=EGI 채널 서버 {#AppVersion}
-AppPublisher=EGI
-DefaultDirName={commonpf64}\EGI Channels
+AppVerName=KODEX 채널 서버 {#AppVersion}
+AppPublisher=KODEX
+DefaultDirName={commonpf64}\KODEX Channels
 DisableProgramGroupPage=yes
 PrivilegesRequired=admin
 ArchitecturesAllowed=x64compatible
@@ -34,7 +34,7 @@ Compression=lzma2/max
 SolidCompression=yes
 WizardStyle=modern
 CloseApplications=no
-UninstallDisplayName=EGI 채널 서버
+UninstallDisplayName=KODEX 채널 서버
 #if FileExists(AppIcon)
 SetupIconFile={#AppIcon}
 #endif

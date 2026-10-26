@@ -10,8 +10,8 @@ const notoSansKR = Noto_Sans_KR({
 });
 
 export const metadata: Metadata = {
-  title: "EGI AI",
-  description: "EGI 사내 데이터 AI 비서",
+  title: "KODEX AI",
+  description: "KODEX 사내 데이터 AI 비서",
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },

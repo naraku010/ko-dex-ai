@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "EGI AI",
+  "productName": "KODEX AI",
   "version": "../package.json",
-  "identifier": "com.egi.ai",
+  "identifier": "com.kodex.ai",
   "build": {
     "frontendDist": "../out",
     "devUrl": "http://localhost:3000",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "EGI AI",
+        "title": "KODEX AI",
         "width": 1280,
         "height": 800,
         "minWidth": 960,
@@ -29,7 +29,7 @@
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDlFNTZCRUE1RDlGRjFCRDIKUldUU0cvL1pwYjVXbmtBZkd6SEhwZXZabDh4eUNTVThxU1kzc3VlMzRYR2FTaU9hYUVTYmhlSHQK",
       "endpoints": [
-        "https://github.com/egibiz/egi-ai-chat/releases/latest/download/latest.json"
+        "https://github.com/naraku010/ko-dex-ai/releases/latest/download/latest.json"
       ]
     }
   },

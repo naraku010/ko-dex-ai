@@ -57,7 +57,7 @@ function matchColumn(header, target) {
 }
 
 function downloadsDir() {
-  const custom = String(process.env.EGI_DOWNLOAD_DIR || '').trim()
+  const custom = String(process.env.KODEX_DOWNLOAD_DIR || '').trim()
   return custom || path.join(os.homedir(), 'Downloads')
 }
 

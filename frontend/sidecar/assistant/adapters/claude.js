@@ -9,7 +9,7 @@ const { buildSystemPrompt } = require('../prompt')
 const { toolLabel: sharedToolLabel } = require('../toolLabels')
 
 const COMMAND = 'claude'
-const MCP_SERVER_NAME = 'egi'
+const MCP_SERVER_NAME = 'kodex'
 
 const MODELS = [
   { id: 'sonnet', label: 'Sonnet', hint: '기본 · 속도와 정확도 균형' },
@@ -252,7 +252,7 @@ function promptOnce({ located, prompt, model }) {
       ...process.env,
       ELECTRON_RUN_AS_NODE: undefined,
       NODE_OPTIONS: undefined,
-      CLAUDE_CODE_ENTRYPOINT: 'egi-ai-suggest',
+      CLAUDE_CODE_ENTRYPOINT: 'kodex-ai-suggest',
     },
   }
   return new Promise((resolve, reject) => {
@@ -312,7 +312,7 @@ function readOnce({ located, prompt, model, cwd, dirs = [], timeoutMs = 10 * 60 
       ...process.env,
       ELECTRON_RUN_AS_NODE: undefined,
       NODE_OPTIONS: undefined,
-      CLAUDE_CODE_ENTRYPOINT: 'egi-ai-index',
+      CLAUDE_CODE_ENTRYPOINT: 'kodex-ai-index',
     },
   }
   return new Promise((resolve, reject) => {
@@ -410,7 +410,7 @@ function send({ located, workDir, mcpConfig, prompt, sessionId, isResume, model,
       ...process.env,
       ELECTRON_RUN_AS_NODE: undefined,
       NODE_OPTIONS: undefined,
-      CLAUDE_CODE_ENTRYPOINT: 'egi-ai',
+      CLAUDE_CODE_ENTRYPOINT: 'kodex-ai',
     },
   }
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 #
-# EGI 채널 서버 설치 (Linux x64, Python 필요 없음)
+# KODEX 채널 서버 설치 (Linux x64, Python 필요 없음)
 #
 # 하는 일
-#   1. 패키지의 채널들을 설치 폴더(기본 /opt/egi-channels)에 복사한다
+#   1. 패키지의 채널들을 설치 폴더(기본 /opt/kodex-channels)에 복사한다
 #   2. 채널마다 .env 가 없으면 .env.example 로 만들고 API 키를 새로 뽑아 넣는다
-#   3. systemd 서비스 egi-channel-<채널> 로 등록하고 /health 응답까지 확인한다
+#   3. systemd 서비스 kodex-channel-<채널> 로 등록하고 /health 응답까지 확인한다
 #   4. 앱에 넣을 주소와 키를 install-summary.txt 에 남긴다
 #
 # 다시 실행하면 갱신이다. 실행 파일만 바꾸고 .env 와 data/ 는 그대로 둔다.
@@ -13,19 +13,19 @@
 # 사용
 #   sudo ./install.sh
 #   sudo ./install.sh --channel shop --host 0.0.0.0
-#   sudo ./install.sh --prefix /srv/egi --user egi --no-service
+#   sudo ./install.sh --prefix /srv/kodex --user kodex --no-service
 #
 # 옵션
-#   --prefix DIR      설치 폴더 (기본 /opt/egi-channels)
+#   --prefix DIR      설치 폴더 (기본 /opt/kodex-channels)
 #   --channel NAME    이 채널만 설치. 여러 번 쓰거나 쉼표로 이을 수 있다
 #   --host ADDR       새로 만드는 .env 의 HOST. 0.0.0.0 이면 다른 PC에서 바로 붙는다
-#   --user NAME       서비스를 돌릴 계정 (기본 egi-channel, 없으면 시스템 계정으로 만든다)
+#   --user NAME       서비스를 돌릴 계정 (기본 kodex-channel, 없으면 시스템 계정으로 만든다)
 #   --no-service      파일과 .env 만 준비하고 서비스는 등록하지 않는다
 
 set -euo pipefail
 
-PREFIX="/opt/egi-channels"
-RUN_USER="egi-channel"
+PREFIX="/opt/kodex-channels"
+RUN_USER="kodex-channel"
 BIND_HOST=""
 NO_SERVICE=0
 ONLY=()
@@ -109,7 +109,7 @@ if ! id "$RUN_USER" >/dev/null 2>&1; then
         || die "계정을 만들지 못했습니다: $RUN_USER"
 fi
 
-line "EGI 채널 서버 $VERSION 설치 → $PREFIX"
+line "KODEX 채널 서버 $VERSION 설치 → $PREFIX"
 mkdir -p "$PREFIX/channels"
 for file in install.sh uninstall.sh README.txt VERSION; do
     [[ -f "$SRC/$file" ]] && install -m 0755 "$SRC/$file" "$PREFIX/$file"
@@ -124,7 +124,7 @@ install_one() {
     local from="$SRC/channels/$name"
     local dir="$PREFIX/channels/$name"
     local bin="$dir/$name-channel"
-    local service="egi-channel-$name"
+    local service="kodex-channel-$name"
     local env_file="$dir/.env"
 
     if [[ "$NO_SERVICE" -eq 0 ]] && systemctl is-active --quiet "$service"; then
@@ -175,7 +175,7 @@ install_one() {
     if [[ "$NO_SERVICE" -eq 0 ]]; then
         cat > "/etc/systemd/system/$service.service" <<EOF
 [Unit]
-Description=EGI 채널 - $name (egi.channel/v1, ${host}:${port})
+Description=KODEX 채널 - $name (kodex.channel/v1, ${host}:${port})
 After=network-online.target
 Wants=network-online.target
 
@@ -229,7 +229,7 @@ for name in "${TARGETS[@]}"; do
 done
 
 {
-    echo "EGI 채널 서버 $VERSION"
+    echo "KODEX 채널 서버 $VERSION"
     echo "설치 폴더: $PREFIX"
     echo
     echo "앱 설정 → 채널 → 채널 추가 에 아래 주소와 키를 넣습니다."
@@ -240,8 +240,8 @@ chmod 0600 "$PREFIX/install-summary.txt"
 line ""
 cat "$PREFIX/install-summary.txt"
 line ""
-line "설정 바꾸기 : sudo nano $PREFIX/channels/<채널>/.env 후 sudo systemctl restart egi-channel-<채널>"
-line "로그        : journalctl -u egi-channel-<채널> -f"
+line "설정 바꾸기 : sudo nano $PREFIX/channels/<채널>/.env 후 sudo systemctl restart kodex-channel-<채널>"
+line "로그        : journalctl -u kodex-channel-<채널> -f"
 line "제거        : sudo $PREFIX/uninstall.sh"
 line "요약 파일   : $PREFIX/install-summary.txt (키가 들어 있어 root만 읽습니다)"
 

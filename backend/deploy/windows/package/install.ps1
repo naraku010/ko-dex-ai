@@ -1,13 +1,13 @@
 ﻿<#
 .SYNOPSIS
-EGI 채널 서버 설치 (Windows x64, Python 필요 없음)
+KODEX 채널 서버 설치 (Windows x64, Python 필요 없음)
 
 .DESCRIPTION
 설치 마법사(setup.exe)가 파일을 복사한 뒤 이 스크립트를 부른다. zip으로 받았으면 풀어둔 폴더에서
 관리자 PowerShell로 직접 실행한다.
 
   1. 채널마다 .env 가 없으면 .env.example 로 만들고 API 키를 새로 뽑아 넣는다
-  2. NSSM으로 Windows 서비스 EgiChannel-<채널> 을 등록하고 /health 응답까지 확인한다
+  2. NSSM으로 Windows 서비스 KodexChannel-<채널> 을 등록하고 /health 응답까지 확인한다
   3. 앱에 넣을 주소와 키를 install-summary.txt 에 남긴다
 
 다시 실행해도 된다. .env 와 data\ 는 그대로 두고 서비스 설정만 다시 맞춘다.
@@ -144,7 +144,7 @@ function Install-Channel([string]$Name) {
 
     $ok = $true
     if (-not $NoService) {
-        $service = "EgiChannel-$Name"
+        $service = "KodexChannel-$Name"
         $existing = Get-Service -Name $service -ErrorAction SilentlyContinue
         if ($existing) {
             if ($existing.Status -ne 'Stopped') { Invoke-Nssm stop $service }
@@ -154,8 +154,8 @@ function Install-Channel([string]$Name) {
         }
         Invoke-Nssm set $service Application $exe
         Invoke-Nssm set $service AppDirectory $dir
-        Invoke-Nssm set $service DisplayName "EGI 채널 - $Name"
-        Invoke-Nssm set $service Description "egi.channel/v1 채널 서버 ($Name). ${hostValue}:$port"
+        Invoke-Nssm set $service DisplayName "KODEX 채널 - $Name"
+        Invoke-Nssm set $service Description "kodex.channel/v1 채널 서버 ($Name). ${hostValue}:$port"
         Invoke-Nssm set $service Start SERVICE_AUTO_START
         Invoke-Nssm set $service AppExit Default Restart
         Invoke-Nssm set $service AppRestartDelay 5000
@@ -177,7 +177,7 @@ function Install-Channel([string]$Name) {
     }
 
     if ($OpenFirewall -and -not $loopback) {
-        $rule = "EGI channel $Name"
+        $rule = "KODEX channel $Name"
         Get-NetFirewallRule -DisplayName $rule -ErrorAction SilentlyContinue | Remove-NetFirewallRule
         New-NetFirewallRule -DisplayName $rule -Direction Inbound -Protocol TCP -LocalPort ([int]$port) -Action Allow | Out-Null
         Write-Line "[$Name] 방화벽에서 TCP $port 를 열었습니다."
@@ -221,17 +221,17 @@ try {
     }
 
     $version = (Get-Content (Join-Path $Root 'VERSION') -ErrorAction SilentlyContinue | Select-Object -First 1)
-    Write-Line "EGI 채널 서버 $version 설치 → $Root"
+    Write-Line "KODEX 채널 서버 $version 설치 → $Root"
     $results = @(foreach ($name in $targets) { Install-Channel $name })
 
     $summary = New-Object System.Collections.Generic.List[string]
-    $summary.Add("EGI 채널 서버 $version")
+    $summary.Add("KODEX 채널 서버 $version")
     $summary.Add("설치 폴더: $Root")
     $summary.Add('')
     $summary.Add('앱 설정 → 채널 → 채널 추가 에 아래 주소와 키를 넣습니다.')
     foreach ($r in $results) { $summary.Add("  $($r.Name)  주소 $($r.Url)  키 $($r.Key)  ($($r.Bind))") }
     $summary.Add('')
-    $summary.Add("설정 파일 : $Root\channels\<채널>\.env  (바꾼 뒤 서비스 EgiChannel-<채널> 재시작)")
+    $summary.Add("설정 파일 : $Root\channels\<채널>\.env  (바꾼 뒤 서비스 KodexChannel-<채널> 재시작)")
     $summary.Add("로그      : $LogDir")
     $summaryFile = Join-Path $Root 'install-summary.txt'
     [System.IO.File]::WriteAllLines($summaryFile, $summary.ToArray(), (New-Object System.Text.UTF8Encoding $true))
